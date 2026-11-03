@@ -202,7 +202,7 @@ func move_towards(target: Vector2i, uses_diagonals: bool, is_chasing: bool) -> b
 
 
 func face_last_known_direction() -> void:
-	facing_direction = Utils.dir_to_string(last_known_facing, facing_direction)
+	facing_direction = Utils.vector_to_cardinal(last_known_facing, facing_direction)
 	update_flashlight()
 	Utils.play_animation(animated_sprite, "idle", facing_direction)
 

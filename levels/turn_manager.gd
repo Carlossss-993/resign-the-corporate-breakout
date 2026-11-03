@@ -138,11 +138,20 @@ func check_guard_vision(guard: Guard, count_lost_turn: bool = true, ignore_hidin
 		guard.last_known_facing = Utils.string_to_dir(player.facing_direction)
 		guard.turns_lost_sight = 0
 		guard.current_state = Guard.State.CHASE
-	elif count_lost_turn and guard.current_state == Guard.State.CHASE:
-		guard.turns_lost_sight += 1
-		if guard.turns_lost_sight >= max_turns_lost_sight:
-			guard.current_state = Guard.State.RETURN
-			guard.turns_lost_sight = 0
+	else:
+		# Se registra la dirección del escape en el instante exacto en que se pierde la vista
+		if was_in_sight:
+			var escape_dir: Vector2i = player.grid_position - guard.last_known_position
+			if escape_dir != Vector2i.ZERO:
+				guard.last_known_facing = escape_dir
+			else:
+				guard.last_known_facing = Utils.string_to_dir(player.facing_direction)
+
+		if count_lost_turn and guard.current_state == Guard.State.CHASE:
+			guard.turns_lost_sight += 1
+			if guard.turns_lost_sight >= max_turns_lost_sight:
+				guard.current_state = Guard.State.RETURN
+				guard.turns_lost_sight = 0
 
 	guard.update_flashlight()
 	guard.update_question_marker()
