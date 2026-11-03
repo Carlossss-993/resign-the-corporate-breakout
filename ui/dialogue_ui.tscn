@@ -32,6 +32,10 @@ corner_radius_top_left = 20
 corner_radius_bottom_right = 20
 corner_detail = 5
 
+[sub_resource type="LabelSettings" id="LabelSettings_gre8m"]
+font_size = 22
+font_color = Color(0, 0, 0, 1)
+
 [node name="DialogueUI" type="CanvasLayer" unique_id=1269275993]
 script = ExtResource("1_jxp35")
 
@@ -92,6 +96,7 @@ custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 size_flags_vertical = 3
 offset_transform_enabled = true
+theme_override_font_sizes/normal_font_size = 18
 
 [node name="NextPrompt" type="Label" parent="TextBox/MarginContainer/VBoxContainer" unique_id=688895820]
 layout_mode = 2
@@ -112,6 +117,7 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 1
 theme_override_font_sizes/font_size = 20
+label_settings = SubResource("LabelSettings_gre8m")
 horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
