@@ -1,0 +1,117 @@
+[gd_scene format=3 uid="uid://cf62riy7wfhwl"]
+
+[ext_resource type="Script" uid="uid://b4ryhueca6wvt" path="res://ui/dialogue_ui.gd" id="1_jxp35"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_njptv"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.07058824, 0.07058824, 0.07058824, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 35
+corner_radius_bottom_right = 35
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2x5cq"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.92941177, 0.9098039, 0.8156863, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 20
+corner_radius_bottom_right = 20
+corner_detail = 5
+
+[node name="DialogueUI" type="CanvasLayer" unique_id=1269275993]
+script = ExtResource("1_jxp35")
+
+[node name="DimOverlay" type="ColorRect" parent="." unique_id=1341260]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="PortraitLeft" type="TextureRect" parent="." unique_id=1084055704]
+custom_minimum_size = Vector2(400, 0)
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PortraitRight" type="TextureRect" parent="." unique_id=1308504042]
+custom_minimum_size = Vector2(400, 0)
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextBox" type="PanelContainer" parent="." unique_id=1766279909]
+custom_minimum_size = Vector2(0, 180)
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 100.0
+offset_top = -200.0
+offset_right = -100.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+offset_transform_enabled = true
+theme_override_styles/panel = SubResource("StyleBoxFlat_njptv")
+
+[node name="MarginContainer" type="MarginContainer" parent="TextBox" unique_id=1492356132]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 35
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TextBox/MarginContainer" unique_id=1188882350]
+layout_mode = 2
+
+[node name="DialogueText" type="RichTextLabel" parent="TextBox/MarginContainer/VBoxContainer" unique_id=189033394]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_vertical = 3
+offset_transform_enabled = true
+
+[node name="NextPrompt" type="Label" parent="TextBox/MarginContainer/VBoxContainer" unique_id=688895820]
+layout_mode = 2
+theme_override_constants/outline_size = 2
+text = "▼ Presiona ENTER para continuar ..."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpeakerBox" type="PanelContainer" parent="." unique_id=1323630212]
+custom_minimum_size = Vector2(160, 50)
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_2x5cq")
+
+[node name="SpeakerName" type="Label" parent="SpeakerBox" unique_id=1231943777]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true

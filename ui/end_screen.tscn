@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://l1hm861nr831"]
+
+[ext_resource type="Script" uid="uid://uba7bdnaec3h" path="res://ui/end_screen.gd" id="1_70k24"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3l2vh"]
+bg_color = Color(0, 0, 0, 0.6666667)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_70k24"]
+bg_color = Color(0.9529412, 0.95686275, 0.9647059, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="EndScreen" type="CanvasLayer" unique_id=1078842170]
+script = ExtResource("1_70k24")
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=1720840672]
+custom_minimum_size = Vector2(0, 200)
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Banner" type="Panel" parent="." unique_id=2029401123]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3l2vh")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Banner" unique_id=2095174233]
+layout_mode = 0
+offset_left = 288.0
+offset_top = 216.0
+offset_right = 864.0
+offset_bottom = 432.0
+offset_transform_enabled = true
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Banner/VBoxContainer" unique_id=943094647]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="Banner/VBoxContainer" unique_id=359896303]
+layout_mode = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(0, -12)
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ActionButton" type="Button" parent="Banner/VBoxContainer" unique_id=153647202]
+custom_minimum_size = Vector2(192, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_70k24")
