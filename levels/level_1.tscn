@@ -5384,15 +5384,10 @@ position = Vector2(262, 168)
 patrol_waypoints = Array[Vector2i]([Vector2i(26, 2), Vector2i(26, 4), Vector2i(18, 4)])
 loop_patrol = false
 diagonal_interval = null
-vision_range = null
-vision_half_width_patrol = null
-vision_half_width_chase = null
-debug_draw_vision = null
-patrol_color = null
-chase_color = Color(0.28235295, 0.5019608, 1, 0.6)
-spotted_color = null
+patrol_color = Color(1, 1, 0, 0.8)
+chase_color = Color(0, 0.53333336, 1, 0.8)
+spotted_color = Color(1, 0, 0, 0.8)
 obstacle_layers = [NodePath("../../Ground/BaseLayer"), NodePath("../../Ground/FurnitureBack0"), NodePath("../../Ground/FurnitureBack1"), NodePath("../../Ground/FurnitureBack2"), NodePath("../../Foreground/PlantsLayer"), NodePath("../../Foreground/FurnitureForward0"), NodePath("../../Foreground/FurnitureForward1"), NodePath("../../Foreground/FurnitureForward2")]
-move_duration = null
 start_cell = Vector2i(26, 2)
 
 [node name="Boss" parent="Actors" unique_id=256773355 instance=ExtResource("16_udfhf")]
