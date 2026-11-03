@@ -5383,7 +5383,6 @@ unique_name_in_owner = true
 position = Vector2(262, 168)
 patrol_waypoints = Array[Vector2i]([Vector2i(26, 2), Vector2i(26, 4), Vector2i(18, 4)])
 loop_patrol = false
-diagonal_interval = null
 patrol_color = Color(1, 1, 0, 0.8)
 chase_color = Color(0, 0.53333336, 1, 0.8)
 spotted_color = Color(1, 0, 0, 0.8)

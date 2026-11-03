@@ -41,6 +41,7 @@ var is_player_in_sight: bool = false
 var last_known_position: Vector2i = Vector2i(-1, -1)
 var last_known_facing: Vector2i = Vector2i.DOWN
 var start_position: Vector2i = Vector2i.ZERO
+var last_completed_grid_pos: Vector2i = Vector2i.ZERO
 var flashlight_wide: bool = false
 
 @onready var alert_icon: StatusIcon = %AlertIcon
@@ -50,11 +51,18 @@ var flashlight_wide: bool = false
 
 func _ready() -> void:
 	super()
+	last_completed_grid_pos = grid_position
 	vision_changed.connect(queue_redraw)
 	if question_icon:
 		question_icon.top_level = true
 	start_position = grid_position
 	update_flashlight()
+
+
+func finish_move() -> void:
+	last_completed_grid_pos = grid_position
+	update_flashlight()
+	super()
 
 
 func _draw() -> void:
@@ -190,7 +198,6 @@ func move_towards(target: Vector2i, uses_diagonals: bool, is_chasing: bool) -> b
 
 	var look_dir: Vector2i = target - grid_position if is_chasing else step_dir
 	move_to_cell(grid_position + step_dir, Utils.vector_to_cardinal(look_dir, facing_direction))
-	update_flashlight()
 	return true
 
 
@@ -325,14 +332,14 @@ func get_vision_tiles() -> Array[Vector2i]:
 	var half_width: int = vision_half_width_chase if current_state == State.CHASE else vision_half_width_patrol
 
 	for side: Vector2i in [right, -right]:
-		var side_cell: Vector2i = grid_position + side
+		var side_cell: Vector2i = last_completed_grid_pos + side
 		if Utils.is_tile_walkable(side_cell, obstacle_layers):
 			tiles.append(side_cell)
 
 	for distance in range(1, vision_range + 1):
 		for offset in range(-half_width, half_width + 1):
-			var cell: Vector2i = grid_position + forward * distance + right * offset
-			if Utils.is_tile_walkable(cell, obstacle_layers) and has_line_of_sight(grid_position, cell):
+			var cell: Vector2i = last_completed_grid_pos + forward * distance + right * offset
+			if Utils.is_tile_walkable(cell, obstacle_layers) and has_line_of_sight(last_completed_grid_pos, cell):
 				tiles.append(cell)
 
 	return tiles
