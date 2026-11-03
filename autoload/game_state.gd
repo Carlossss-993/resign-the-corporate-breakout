@@ -1,13 +1,39 @@
 extends Node
 
 const SAVE_PATH: String = "user://save_data.cfg"
+const MAIN_MENU_PATH: String = "res://ui/main_menu.tscn"
 
 var intro_seen: bool = false
 var level_records: Dictionary = {}
 
+@export var levels: Array[String] = [
+	"res://levels/level_1.tscn",
+]
+var current_level_index: int = 0
+
 
 func _ready() -> void:
 	load_records()
+
+
+func go_to_next_level() -> void:
+	current_level_index += 1
+	if current_level_index < levels.size():
+		get_tree().change_scene_to_file(levels[current_level_index])
+	else:
+		go_to_menu()
+
+
+func restart_level() -> void:
+	if current_level_index < levels.size():
+		get_tree().change_scene_to_file(levels[current_level_index])
+	else:
+		get_tree().reload_current_scene()
+
+
+func go_to_menu() -> void:
+	current_level_index = 0
+	get_tree().change_scene_to_file(MAIN_MENU_PATH)
 
 
 func get_best_record(level_id: String) -> int:
