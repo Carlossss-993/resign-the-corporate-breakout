@@ -11,6 +11,7 @@ extends CanvasLayer
 @onready var action_button: Button = $Banner/VBoxContainer/ActionButton
 
 var audio_player: AudioStreamPlayer
+var is_victory: bool = false
 
 
 func _ready() -> void:
@@ -25,6 +26,7 @@ func _ready() -> void:
 
 
 func show_defeat() -> void:
+	is_victory = false
 	title_label.text = "TE HAN ATRAPADO"
 	title_label.add_theme_color_override("font_color", Color(0.85, 0.15, 0.15, 1.0))
 	subtitle_label.text = "El guardia te descubrió antes de alcanzar la salida."
@@ -38,6 +40,7 @@ func show_defeat() -> void:
 
 
 func show_victory(turns_taken: int, best_record: int, is_new_record: bool) -> void:
+	is_victory = true
 	title_label.text = "PISO COMPLETADO"
 	title_label.add_theme_color_override("font_color", Color(0.2, 0.85, 0.35, 1.0))
 
@@ -68,4 +71,7 @@ func animate_appearance() -> void:
 
 
 func _on_action_button_pressed() -> void:
-	get_tree().reload_current_scene()
+	if is_victory:
+		GameState.go_to_next_level()
+	else:
+		GameState.restart_level()
