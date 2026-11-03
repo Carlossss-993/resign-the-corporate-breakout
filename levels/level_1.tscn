@@ -8,7 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://cifawx060nywn" path="res://actors/guard.tscn" id="7_bgw3c"]
 [ext_resource type="TileSet" uid="uid://cs288rl36jt6f" path="res://assets/tilesets/plants_layer.tres" id="9_bgw3c"]
 [ext_resource type="TileSet" uid="uid://dlkn672d0ke6s" path="res://assets/tilesets/forniture.tres" id="10_lrvbd"]
+[ext_resource type="AudioStream" uid="uid://b0whppdlgam1c" path="res://assets/audio/Defeat.mp3" id="15_lrvbd"]
 [ext_resource type="PackedScene" uid="uid://l1hm861nr831" path="res://ui/end_screen.tscn" id="16_bgw3c"]
+[ext_resource type="AudioStream" uid="uid://dtji2fykdimgj" path="res://assets/audio/Victory.mp3" id="16_oqlok"]
 [ext_resource type="PackedScene" uid="uid://divo673owpk4g" path="res://actors/boss.tscn" id="16_udfhf"]
 [ext_resource type="PackedScene" uid="uid://c1lioj24o2wy" path="res://ui/hud.tscn" id="17_lrvbd"]
 [ext_resource type="Script" uid="uid://ig4p8g7yrucx" path="res://levels/turn_manager.gd" id="18_xapae"]
@@ -182,7 +184,7 @@ position = Vector2(96, 144)
 plants_layer = NodePath("../../Foreground/PlantsLayer")
 hidden_opacity = 0.5
 opacity_tween_duration = 0.2
-obstacle_layers = [NodePath("../../Ground/BaseLayer"), NodePath("../../Ground/FurnitureBack0"), NodePath("../../Ground/FurnitureBack1"), NodePath("../../Ground/FurnitureBack2"), NodePath("../../Foreground/FurnitureForward0"), NodePath("../../Foreground/FurnitureForward1"), NodePath("../../Foreground/FurnitureForward2")]
+obstacle_layers = [NodePath("../../Ground/BaseLayer"), NodePath("../../Ground/FixturesLayer"), NodePath("../../Ground/FurnitureBack0"), NodePath("../../Ground/FurnitureBack1"), NodePath("../../Ground/FurnitureBack2"), NodePath("../../Foreground/FurnitureForward0"), NodePath("../../Foreground/FurnitureForward1"), NodePath("../../Foreground/FurnitureForward2")]
 move_duration = 0.3
 start_cell = Vector2i(9, 7)
 
@@ -194,7 +196,7 @@ loop_patrol = false
 patrol_color = Color(1, 1, 0, 0.8)
 chase_color = Color(0, 0.53333336, 1, 0.8)
 spotted_color = Color(1, 0, 0, 0.8)
-obstacle_layers = [NodePath("../../Ground/BaseLayer"), NodePath("../../Ground/FurnitureBack0"), NodePath("../../Ground/FurnitureBack1"), NodePath("../../Ground/FurnitureBack2"), NodePath("../../Foreground/PlantsLayer"), NodePath("../../Foreground/FurnitureForward0"), NodePath("../../Foreground/FurnitureForward1"), NodePath("../../Foreground/FurnitureForward2")]
+obstacle_layers = [NodePath("../../Ground/BaseLayer"), NodePath("../../Ground/FixturesLayer"), NodePath("../../Ground/FurnitureBack0"), NodePath("../../Ground/FurnitureBack1"), NodePath("../../Ground/FurnitureBack2"), NodePath("../../Foreground/PlantsLayer"), NodePath("../../Foreground/FurnitureForward0"), NodePath("../../Foreground/FurnitureForward1"), NodePath("../../Foreground/FurnitureForward2")]
 start_cell = Vector2i(26, 2)
 
 [node name="Boss" parent="Actors" unique_id=256773355 instance=ExtResource("16_udfhf")]
@@ -306,6 +308,8 @@ visible = false
 [node name="EndScreen" parent="." unique_id=1078842170 instance=ExtResource("16_bgw3c")]
 unique_name_in_owner = true
 visible = false
+defeat_sound = ExtResource("15_lrvbd")
+victory_sound = ExtResource("16_oqlok")
 
 [node name="HUD" parent="." unique_id=1541671604 instance=ExtResource("17_lrvbd")]
 unique_name_in_owner = true

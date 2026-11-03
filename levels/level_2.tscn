@@ -1,0 +1,109 @@
+[gd_scene format=4 uid="uid://chdhbikv4jvmm"]
+
+[ext_resource type="Script" uid="uid://b5p0t1vio85r5" path="res://levels/level_base.gd" id="1_hbb88"]
+[ext_resource type="TileSet" uid="uid://3pp8xfou4qw4" path="res://assets/tilesets/base_layer.tres" id="2_wcjpl"]
+[ext_resource type="TileSet" uid="uid://detjys721l63i" path="res://assets/tilesets/fixtures.tres" id="3_5orea"]
+[ext_resource type="TileSet" uid="uid://dlkn672d0ke6s" path="res://assets/tilesets/forniture.tres" id="4_0ourt"]
+[ext_resource type="PackedScene" uid="uid://cd1654qqouk7" path="res://actors/player.tscn" id="5_w200a"]
+[ext_resource type="PackedScene" uid="uid://cifawx060nywn" path="res://actors/guard.tscn" id="6_uo0vl"]
+[ext_resource type="TileSet" uid="uid://cs288rl36jt6f" path="res://assets/tilesets/plants_layer.tres" id="7_k2aru"]
+[ext_resource type="Texture2D" uid="uid://w62fwnoaj1lt" path="res://assets/lighting/light_texture_circle.webp" id="8_ndgrd"]
+[ext_resource type="Script" uid="uid://ig4p8g7yrucx" path="res://levels/turn_manager.gd" id="9_h351q"]
+[ext_resource type="PackedScene" uid="uid://cf62riy7wfhwl" path="res://ui/dialogue_ui.tscn" id="10_dpc8t"]
+[ext_resource type="PackedScene" uid="uid://l1hm861nr831" path="res://ui/end_screen.tscn" id="11_ngvhw"]
+[ext_resource type="AudioStream" uid="uid://b0whppdlgam1c" path="res://assets/audio/Defeat.mp3" id="12_5orea"]
+[ext_resource type="PackedScene" uid="uid://c1lioj24o2wy" path="res://ui/hud.tscn" id="12_itbe0"]
+[ext_resource type="AudioStream" uid="uid://dtji2fykdimgj" path="res://assets/audio/Victory.mp3" id="13_0ourt"]
+
+[node name="Level2" type="Node2D" unique_id=169069877 node_paths=PackedStringArray("turn_manager", "player", "end_screen", "hud")]
+script = ExtResource("1_hbb88")
+turn_manager = NodePath("TurnManager")
+player = NodePath("Actors/Player")
+end_screen = NodePath("EndScreen")
+hud = NodePath("HUD")
+
+[node name="NightEffect" type="CanvasModulate" parent="." unique_id=1657195542]
+color = Color(0.25882354, 0.23921569, 0.40784314, 1)
+
+[node name="Ground" type="Node2D" parent="." unique_id=2086634492]
+
+[node name="BaseLayer" type="TileMapLayer" parent="Ground" unique_id=115368021]
+unique_name_in_owner = true
+tile_map_data = PackedByteArray("AAABAAEAAgAAAAgAAAABAAIAAgALAAYAAAABAAMAAgALAAYAAAACAAMAAgALAAYAAAACAAQAAgALAAYAAAABAAQAAgALAAYAAAACAAIAAgALAAYAAAACAAEAAgAAAAgAAAADAAEAAgAAAAgAAAADAAIAAgALAAYAAAADAAMAAgALAAYAAAADAAQAAgALAAYAAAAEAAQAAgALAAYAAAAEAAMAAgALAAYAAAAEAAIAAgALAAYAAAAFAAIAAgALAAYAAAAFAAEAAgAAAAgAAAAEAAEAAgAAAAgAAAAFAAMAAgALAAYAAAAFAAQAAgALAAYAAAAGAAQAAgALAAYAAAAGAAMAAgALAAYAAAAGAAIAAgALAAYAAAAGAAEAAgAAAAgAAAAHAAEAAgAAAAgAAAAHAAIAAgALAAYAAAAHAAMAAgALAAYAAAAHAAQAAgALAAYAAAAIAAQAAgALAAYAAAAIAAMAAgALAAYAAAAIAAIAAgALAAYAAAAIAAEAAgAAAAgAAAAJAAEAAgAAAAgAAAAJAAIAAgALAAYAAAAJAAMAAgALAAYAAAAJAAQAAgALAAYAAAAKAAMAAgALAAYAAAAKAAIAAgALAAYAAAAKAAEAAgAAAAgAAAAKAAQAAgALAAYAAAALAAQAAgALAAYAAAALAAMAAgALAAYAAAALAAIAAgALAAYAAAALAAEAAgALAAYAAAAMAAEAAgALAAYAAAAMAAIAAgALAAYAAAAMAAMAAgALAAYAAAAMAAQAAgALAAYAAAANAAQAAgALAAYAAAANAAMAAgALAAYAAAANAAIAAgALAAYAAAANAAEAAgAAAAgAAAABAAAAAgAAAAcAAAACAAAAAgAAAAcAAAADAAAAAgAAAAcAAAAEAAAAAgAAAAcAAAAFAAAAAgAAAAcAAAAGAAAAAgAAAAcAAAAHAAAAAgAAAAcAAAAIAAAAAgAAAAcAAAAJAAAAAgAAAAcAAAAKAAAAAgAAAAcAAAANAAAAAgAAAAcAAAAAAAAAAgAHAAEAAAAAAAEAAgAHAAIAAAAAAAIAAgAHAAIAAAAAAAMAAgAHAAIAAAAAAAQAAgAHAAIAAAAAAAUAAgAHAAMAAAABAAUAAgAIAAMAAAACAAUAAgAIAAMAAAADAAUAAgAIAAMAAAAEAAUAAgAIAAMAAAAFAAUAAgAIAAMAAAAGAAUAAgAIAAMAAAAHAAUAAgAIAAMAAAAIAAUAAgAIAAMAAAAJAAUAAgAIAAMAAAAKAAUAAgAIAAMAAAALAAUAAgAIAAMAAAAMAAUAAgAIAAMAAAANAAUAAgAIAAMAAAAOAAUAAgAJAAMAAAAOAAQAAgAJAAIAAAAOAAMAAgAJAAIAAAAOAAIAAgAJAAIAAAAOAAEAAgAJAAIAAAAOAAAAAgAJAAEAAAA=")
+tile_set = ExtResource("2_wcjpl")
+
+[node name="FixturesLayer" type="TileMapLayer" parent="Ground" unique_id=145023493]
+tile_map_data = PackedByteArray("AAALAAAAAAAGAC8AAAALAAEAAAAGADAAAAAMAAAAAAAHAC8AAAAMAAEAAAAHADAAAAA=")
+tile_set = ExtResource("3_5orea")
+
+[node name="FurnitureBack0" type="TileMapLayer" parent="Ground" unique_id=1485218970]
+tile_set = ExtResource("4_0ourt")
+
+[node name="FurnitureBack1" type="TileMapLayer" parent="Ground" unique_id=2054317302]
+tile_set = ExtResource("4_0ourt")
+
+[node name="FurnitureBack2" type="TileMapLayer" parent="Ground" unique_id=1446341142]
+tile_set = ExtResource("4_0ourt")
+
+[node name="Actors" type="Node2D" parent="." unique_id=1001583594]
+
+[node name="Player" parent="Actors" unique_id=1310945894 node_paths=PackedStringArray("plants_layer", "obstacle_layers") instance=ExtResource("5_w200a")]
+unique_name_in_owner = true
+position = Vector2(96, 144)
+plants_layer = NodePath("../../Foreground/PlantsLayer")
+hidden_opacity = 0.5
+opacity_tween_duration = 0.2
+obstacle_layers = [NodePath("../../Ground/BaseLayer"), NodePath("../../Ground/FixturesLayer"), NodePath("../../Ground/FurnitureBack0"), NodePath("../../Ground/FurnitureBack1"), NodePath("../../Ground/FurnitureBack2"), NodePath("../../Foreground/FurnitureForward0"), NodePath("../../Foreground/FurnitureForward1"), null]
+move_duration = 0.3
+start_cell = Vector2i(1, 2)
+
+[node name="Guard" parent="Actors" unique_id=270973211 node_paths=PackedStringArray("obstacle_layers") instance=ExtResource("6_uo0vl")]
+unique_name_in_owner = true
+position = Vector2(262, 168)
+loop_patrol = false
+patrol_color = Color(1, 1, 0, 0.8)
+chase_color = Color(0, 0.53333336, 1, 0.8)
+spotted_color = Color(1, 0, 0, 0.8)
+obstacle_layers = [NodePath("../../Ground/BaseLayer"), NodePath("../../Ground/FixturesLayer"), NodePath("../../Ground/FurnitureBack0"), NodePath("../../Ground/FurnitureBack1"), NodePath("../../Ground/FurnitureBack2"), NodePath("../../Foreground/PlantsLayer"), NodePath("../../Foreground/FurnitureForward0"), NodePath("../../Foreground/FurnitureForward1"), null]
+start_cell = Vector2i(13, 4)
+
+[node name="Foreground" type="Node2D" parent="." unique_id=1505530602]
+
+[node name="PlantsLayer" type="TileMapLayer" parent="Foreground" unique_id=366065877]
+tile_set = ExtResource("7_k2aru")
+
+[node name="FurnitureForward0" type="TileMapLayer" parent="Foreground" unique_id=838996080]
+tile_set = ExtResource("4_0ourt")
+
+[node name="FurnitureForward1" type="TileMapLayer" parent="Foreground" unique_id=1072020917]
+tile_set = ExtResource("4_0ourt")
+
+[node name="Lights" type="Node2D" parent="." unique_id=951326034]
+
+[node name="PointLight2D" type="PointLight2D" parent="Lights" unique_id=1049547419]
+position = Vector2(456, 373)
+color = Color(0.4392157, 0.8392157, 1, 1)
+shadow_enabled = true
+texture = ExtResource("8_ndgrd")
+
+[node name="TurnManager" type="Node" parent="." unique_id=270903450 node_paths=PackedStringArray("player", "guards")]
+unique_name_in_owner = true
+script = ExtResource("9_h351q")
+player = NodePath("../Actors/Player")
+guards = [NodePath("../Actors/Guard")]
+exit_cells = Array[Vector2i]([Vector2i(11, 1), Vector2i(12, 1)])
+max_hidden_detect_distance = 0
+
+[node name="DialogueUI" parent="." unique_id=1269275993 instance=ExtResource("10_dpc8t")]
+unique_name_in_owner = true
+visible = false
+
+[node name="EndScreen" parent="." unique_id=1078842170 instance=ExtResource("11_ngvhw")]
+unique_name_in_owner = true
+visible = false
+defeat_sound = ExtResource("12_5orea")
+victory_sound = ExtResource("13_0ourt")
+
+[node name="HUD" parent="." unique_id=1541671604 instance=ExtResource("12_itbe0")]
+unique_name_in_owner = true
+visible = false
