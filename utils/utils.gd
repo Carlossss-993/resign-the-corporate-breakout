@@ -44,6 +44,14 @@ static func grid_to_world(cell: Vector2i, layers: Array[TileMapLayer]) -> Vector
 	return base_layer.to_global(base_layer.map_to_local(cell))
 
 
+static func world_to_grid(world_pos: Vector2, layers: Array[TileMapLayer]) -> Vector2i:
+	var base_layer: TileMapLayer = get_base_layer(layers)
+	if base_layer == null:
+		return Vector2i.ZERO
+	var local_pos: Vector2 = base_layer.to_local(world_pos)
+	return base_layer.local_to_map(local_pos)
+
+
 static func align_to_grid(node: Node2D, cell: Vector2i, layers: Array[TileMapLayer]) -> void:
 	node.global_position = grid_to_world(cell, layers)
 

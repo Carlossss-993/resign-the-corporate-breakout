@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bgghahab3xp72"]
+
+[ext_resource type="Script" uid="uid://da25tgha3axx5" path="res://actors/coffee_pickup.gd" id="1_12m1k"]
+[ext_resource type="Texture2D" uid="uid://bhg0mhir7syam" path="res://assets/items/cup.png" id="1_j8hff"]
+
+[node name="CoffeePickup" type="Node2D" unique_id=698757758]
+script = ExtResource("1_12m1k")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=963963588]
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("1_j8hff")

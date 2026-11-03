@@ -22,10 +22,24 @@ var turns_taken: int = 0
 
 
 func _ready() -> void:
+	add_to_group("turn_manager")
 	if player == null:
 		push_error("TurnManager needs a reference to the Player node.")
 		return
 	player.player_moved.connect(on_player_moved)
+
+
+func make_noise(noise_cell: Vector2i, radius: int = -1) -> void:
+	var effective_radius: int = radius if radius > 0 else guard_alert_radius
+
+	for guard: Guard in guards:
+		# Si el guardia ya está persiguiendo activamente al jugador, ignora el ruido distractor
+		if guard.current_state == Guard.State.CHASE:
+			continue
+
+		var dist: int = Utils.chebyshev_distance(guard.grid_position, noise_cell)
+		if dist <= effective_radius:
+			guard.investigate_noise(noise_cell)
 
 
 func on_player_moved(_new_grid_pos: Vector2i) -> void:
@@ -139,7 +153,6 @@ func check_guard_vision(guard: Guard, count_lost_turn: bool = true, ignore_hidin
 		guard.turns_lost_sight = 0
 		guard.current_state = Guard.State.CHASE
 	else:
-		# Se registra la dirección del escape en el instante exacto en que se pierde la vista
 		if was_in_sight:
 			var escape_dir: Vector2i = player.grid_position - guard.last_known_position
 			if escape_dir != Vector2i.ZERO:

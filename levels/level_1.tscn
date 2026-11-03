@@ -8,14 +8,14 @@
 [ext_resource type="PackedScene" uid="uid://cifawx060nywn" path="res://actors/guard.tscn" id="7_bgw3c"]
 [ext_resource type="TileSet" uid="uid://cs288rl36jt6f" path="res://assets/tilesets/plants_layer.tres" id="9_bgw3c"]
 [ext_resource type="TileSet" uid="uid://dlkn672d0ke6s" path="res://assets/tilesets/forniture.tres" id="10_lrvbd"]
-[ext_resource type="AudioStream" uid="uid://b0whppdlgam1c" path="res://assets/audio/Defeat.mp3" id="15_lrvbd"]
+[ext_resource type="AudioStream" uid="uid://b0whppdlgam1c" path="res://assets/audio/defeat.mp3" id="15_lrvbd"]
 [ext_resource type="PackedScene" uid="uid://l1hm861nr831" path="res://ui/end_screen.tscn" id="16_bgw3c"]
-[ext_resource type="AudioStream" uid="uid://dtji2fykdimgj" path="res://assets/audio/Victory.mp3" id="16_oqlok"]
+[ext_resource type="AudioStream" uid="uid://dtji2fykdimgj" path="res://assets/audio/victory.mp3" id="16_oqlok"]
 [ext_resource type="PackedScene" uid="uid://divo673owpk4g" path="res://actors/boss.tscn" id="16_udfhf"]
 [ext_resource type="PackedScene" uid="uid://c1lioj24o2wy" path="res://ui/hud.tscn" id="17_lrvbd"]
 [ext_resource type="Script" uid="uid://ig4p8g7yrucx" path="res://levels/turn_manager.gd" id="18_xapae"]
 [ext_resource type="Texture2D" uid="uid://w62fwnoaj1lt" path="res://assets/lighting/light_texture_circle.webp" id="19_r0nt2"]
-[ext_resource type="AudioStream" uid="uid://dbei1xh1e5alo" path="res://assets/audio/Elevator_Ding.mp3" id="20_xv8d5"]
+[ext_resource type="AudioStream" uid="uid://dbei1xh1e5alo" path="res://assets/audio/elevator_ding.mp3" id="20_xv8d5"]
 [ext_resource type="PackedScene" uid="uid://cf62riy7wfhwl" path="res://ui/dialogue_ui.tscn" id="21_0wxk8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j5i5n"]
@@ -143,6 +143,8 @@ animations = [{
 
 [node name="Level1" type="Node2D" unique_id=169069877]
 script = ExtResource("1_i6od7")
+floor_number = 4
+floor_name = "Oficinas Principales"
 
 [node name="NightEffect" type="CanvasModulate" parent="." unique_id=1657195542]
 color = Color(0.25882354, 0.23921569, 0.40784314, 1)

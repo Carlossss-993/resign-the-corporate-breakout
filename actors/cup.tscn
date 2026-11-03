@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://w1cweknpxml7"]
+
+[ext_resource type="Script" uid="uid://uo7fkutpw58m" path="res://actors/cup.gd" id="1_rrvk3"]
+[ext_resource type="Texture2D" uid="uid://bhg0mhir7syam" path="res://assets/items/cup.png" id="2_cwnho"]
+[ext_resource type="Texture2D" uid="uid://kyt8wq5lwdp1" path="res://assets/items/shards.png" id="3_vg80s"]
+[ext_resource type="AudioStream" uid="uid://b3vffqgwrdc3g" path="res://assets/audio/cup_break.mp3" id="4_oaekl"]
+
+[node name="Cup" type="Node2D" unique_id=1238647813]
+script = ExtResource("1_rrvk3")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=833843362]
+unique_name_in_owner = true
+texture = ExtResource("2_cwnho")
+
+[node name="BreakParticles" type="CPUParticles2D" parent="." unique_id=1169848137]
+unique_name_in_owner = true
+emitting = false
+amount = 12
+texture = ExtResource("3_vg80s")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+direction = Vector2(0, -1)
+gravity = Vector2(0, 400)
+initial_velocity_min = 80.0
+initial_velocity_max = 180.0
+
+[node name="BreakAudio" type="AudioStreamPlayer2D" parent="." unique_id=442873273]
+unique_name_in_owner = true
+stream = ExtResource("4_oaekl")

@@ -2,6 +2,7 @@ class_name Player
 extends GridActor
 
 signal player_moved(new_grid_pos: Vector2i)
+signal cups_changed(amount: int)
 
 const MOVE_ACTIONS: Dictionary = {
 	"move_right": Vector2i.RIGHT,
@@ -15,18 +16,35 @@ const MOVE_ACTIONS: Dictionary = {
 @export var hidden_opacity: float = 0.5
 @export var opacity_tween_duration: float = 0.2
 
+@export_group("Items & Throw")
+@export var max_cups: int = 2
+@export var throw_range: int = 5
+@export var cup_scene: PackedScene = preload("res://actors/cup.tscn")
+@export var error_sound: AudioStream = preload("res://assets/audio/denied.mp3")
+
+@export_group("Visual Highlights")
+@export var range_color: Color = Color(0.2, 0.8, 1.0, 0.3)
+
+var current_cups: int = 0:
+	set(value):
+		current_cups = clampi(value, 0, max_cups)
+		cups_changed.emit(current_cups)
+
 var previous_grid_position: Vector2i
 var buffered_dir: Vector2i = Vector2i.ZERO
 var buffered_wait: bool = false
 var input_locked: bool = false
 var is_hidden: bool = false
 var just_entered_plant: bool = false
+var is_aiming: bool = false
 
 @onready var camera: Camera2D = $Camera2D
+@onready var audio_player: AudioStreamPlayer = AudioStreamPlayer.new()
 
 
 func _ready() -> void:
 	super()
+	add_child(audio_player)
 	set_camera_limits()
 	check_hiding_status()
 
@@ -45,19 +63,138 @@ func set_camera_limits() -> void:
 	camera.limit_bottom = used_rect.end.y * tile_size.y
 
 
-# --- Input ---
+# --- Input & Aiming ---
 func _unhandled_input(event: InputEvent) -> void:
+	if input_locked:
+		return
+
+	if event.is_action_pressed("interact"):
+		if try_interact_coffee():
+			return
+
+	# Manejo del lanzamiento de taza (acción "throw")
+	if event.is_action_pressed("throw"):
+		if current_cups <= 0:
+			play_error_sound()
+			return
+		is_aiming = true
+		queue_redraw()
+		return
+
+	elif event.is_action_released("throw") and is_aiming:
+		is_aiming = false
+		queue_redraw()
+		try_throw_cup()
+		return
+
+	elif is_aiming and event is InputEventMouseMotion:
+		queue_redraw()
+		return
+
+	# Movimiento del jugador
 	var dir: Vector2i = read_direction(event)
 	var wants_wait: bool = event.is_action_pressed("wait")
 	if dir == Vector2i.ZERO and not wants_wait:
 		return
 
-	if is_moving or input_locked:
+	if is_moving:
 		buffered_dir = dir
 		buffered_wait = wants_wait
 		return
 
 	act(dir, wants_wait)
+
+
+func try_interact_coffee() -> bool:
+	var pickups: Array[Node] = get_tree().get_nodes_in_group("coffee_pickups")
+	for pickup in pickups:
+		if pickup is CoffeePickup:
+			# Si el jugador está en la celda contigua (distancia Chebyshev <= 1)
+			var dist: int = Utils.chebyshev_distance(grid_position, pickup.grid_position)
+			if dist <= 1:
+				return pickup.try_collect(self)
+	return false
+
+
+func _draw() -> void:
+	if not is_aiming or current_cups <= 0:
+		return
+
+	var base_layer: TileMapLayer = Utils.get_base_layer(obstacle_layers)
+	if base_layer == null:
+		return
+
+	var tile_size: Vector2 = Vector2(base_layer.tile_set.tile_size)
+	var hovered_cell: Vector2i = Utils.world_to_grid(get_global_mouse_position(), obstacle_layers)
+
+	for x in range(-throw_range, throw_range + 1):
+		for y in range(-throw_range, throw_range + 1):
+			var cell: Vector2i = grid_position + Vector2i(x, y)
+			
+			# Rango circular exacto en grilla
+			if grid_position.distance_to(cell) <= throw_range:
+				# Verifica que la casilla sea caminable y que haya línea de visión directa (sin paredes en medio)
+				if Utils.is_tile_walkable(cell, obstacle_layers) and Utils.has_line_of_sight(grid_position, cell, obstacle_layers):
+					var center: Vector2 = to_local(Utils.grid_to_world(cell, obstacle_layers))
+					var color: Color = range_color
+					
+					if cell == hovered_cell:
+						color.a = 0.65 # Resaltar con más opacidad la celda bajo el puntero
+
+					draw_rect(Rect2(center - tile_size / 2.0, tile_size), color)
+
+
+# --- Cup Action Logic ---
+func try_throw_cup() -> void:
+	var target_cell: Vector2i = Utils.world_to_grid(get_global_mouse_position(), obstacle_layers)
+
+	var in_range: bool = grid_position.distance_to(target_cell) <= throw_range
+	var is_walkable: bool = Utils.is_tile_walkable(target_cell, obstacle_layers)
+	var has_los: bool = Utils.has_line_of_sight(grid_position, target_cell, obstacle_layers)
+
+	if not in_range or not is_walkable or not has_los or target_cell == grid_position:
+		play_error_sound()
+		return
+
+	execute_throw(target_cell)
+
+
+func execute_throw(target_cell: Vector2i) -> void:
+	current_cups -= 1
+	input_locked = true # 1. Bloquea el input durante el vuelo de la taza
+
+	if cup_scene:
+		var cup_instance = cup_scene.instantiate()
+		get_parent().add_child(cup_instance)
+		
+		var start_pos: Vector2 = global_position
+		var target_pos: Vector2 = Utils.grid_to_world(target_cell, obstacle_layers)
+		
+		cup_instance.launch(start_pos, target_pos, target_cell, obstacle_layers)
+		
+		# 2. Espera a que la taza toque el suelo y ejecute make_noise()
+		if cup_instance.has_signal("impacted"):
+			await cup_instance.impacted
+
+	previous_grid_position = grid_position
+	just_entered_plant = false
+	
+	# 3. Al emitir player_moved AHORA, los guardias ya estarán en estado INVESTIGATE 
+	# y darán su primer paso directamente hacia el charco en este turno.
+	player_moved.emit(grid_position)
+
+
+func add_cup() -> void:
+	if current_cups < max_cups:
+		current_cups += 1
+	else:
+		play_error_sound()
+
+
+func play_error_sound() -> void:
+	if error_sound:
+		audio_player.stream = error_sound
+		audio_player.play()
 
 
 func read_direction(event: InputEvent) -> Vector2i:

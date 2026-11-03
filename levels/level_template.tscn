@@ -9,9 +9,9 @@
 [ext_resource type="TileSet" uid="uid://cs288rl36jt6f" path="res://assets/tilesets/plants_layer.tres" id="9_2hiwd"]
 [ext_resource type="Texture2D" uid="uid://w62fwnoaj1lt" path="res://assets/lighting/light_texture_circle.webp" id="10_0buo8"]
 [ext_resource type="Script" uid="uid://ig4p8g7yrucx" path="res://levels/turn_manager.gd" id="11_h4x42"]
-[ext_resource type="AudioStream" uid="uid://b0whppdlgam1c" path="res://assets/audio/Defeat.mp3" id="12_u6tk6"]
+[ext_resource type="AudioStream" uid="uid://b0whppdlgam1c" path="res://assets/audio/defeat.mp3" id="12_u6tk6"]
 [ext_resource type="PackedScene" uid="uid://cf62riy7wfhwl" path="res://ui/dialogue_ui.tscn" id="13_hx3r8"]
-[ext_resource type="AudioStream" uid="uid://dtji2fykdimgj" path="res://assets/audio/Victory.mp3" id="13_pqv4r"]
+[ext_resource type="AudioStream" uid="uid://dtji2fykdimgj" path="res://assets/audio/victory.mp3" id="13_pqv4r"]
 [ext_resource type="PackedScene" uid="uid://l1hm861nr831" path="res://ui/end_screen.tscn" id="14_6ncks"]
 [ext_resource type="PackedScene" uid="uid://c1lioj24o2wy" path="res://ui/hud.tscn" id="15_8fe48"]
 

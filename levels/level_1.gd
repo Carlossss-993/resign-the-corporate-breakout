@@ -63,6 +63,9 @@ func _ready() -> void:
 		hud.visible = true
 		return
 
+	if hud:
+		hud.visible = false
+
 	if player:
 		player.set_process_unhandled_input(false)
 	get_tree().create_timer(0.5).timeout.connect(run_intro_cutscene)

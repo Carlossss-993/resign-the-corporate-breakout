@@ -42,6 +42,15 @@ func setup_level_base() -> void:
 		if exit_cell != Vector2i(-1, -1):
 			turn_manager.exit_cell = exit_cell
 
+	# --- Inicialización del HUD ---
+	if hud:
+		hud.visible = true # Muestra el HUD por defecto en todos los niveles
+		hud.update_floor_info(floor_number, floor_name)
+
+	if player and hud:
+		player.cups_changed.connect(hud.update_cups)
+		hud.update_cups(player.current_cups)
+
 
 func _on_turn_updated(turns: int) -> void:
 	if hud:

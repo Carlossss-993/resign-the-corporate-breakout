@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://chdhbikv4jvmm"]
 
-[ext_resource type="Script" uid="uid://b5p0t1vio85r5" path="res://levels/level_base.gd" id="1_hbb88"]
+[ext_resource type="Script" uid="uid://cj2uyub3sykg7" path="res://levels/level_2.gd" id="1_0ourt"]
 [ext_resource type="TileSet" uid="uid://3pp8xfou4qw4" path="res://assets/tilesets/base_layer.tres" id="2_wcjpl"]
 [ext_resource type="TileSet" uid="uid://detjys721l63i" path="res://assets/tilesets/fixtures.tres" id="3_5orea"]
 [ext_resource type="TileSet" uid="uid://dlkn672d0ke6s" path="res://assets/tilesets/forniture.tres" id="4_0ourt"]
@@ -11,16 +11,13 @@
 [ext_resource type="Script" uid="uid://ig4p8g7yrucx" path="res://levels/turn_manager.gd" id="9_h351q"]
 [ext_resource type="PackedScene" uid="uid://cf62riy7wfhwl" path="res://ui/dialogue_ui.tscn" id="10_dpc8t"]
 [ext_resource type="PackedScene" uid="uid://l1hm861nr831" path="res://ui/end_screen.tscn" id="11_ngvhw"]
-[ext_resource type="AudioStream" uid="uid://b0whppdlgam1c" path="res://assets/audio/Defeat.mp3" id="12_5orea"]
+[ext_resource type="AudioStream" uid="uid://b0whppdlgam1c" path="res://assets/audio/defeat.mp3" id="12_5orea"]
 [ext_resource type="PackedScene" uid="uid://c1lioj24o2wy" path="res://ui/hud.tscn" id="12_itbe0"]
-[ext_resource type="AudioStream" uid="uid://dtji2fykdimgj" path="res://assets/audio/Victory.mp3" id="13_0ourt"]
+[ext_resource type="AudioStream" uid="uid://dtji2fykdimgj" path="res://assets/audio/victory.mp3" id="13_0ourt"]
+[ext_resource type="PackedScene" uid="uid://bgghahab3xp72" path="res://actors/coffee_pickup.tscn" id="15_0ourt"]
 
-[node name="Level2" type="Node2D" unique_id=169069877 node_paths=PackedStringArray("turn_manager", "player", "end_screen", "hud")]
-script = ExtResource("1_hbb88")
-turn_manager = NodePath("TurnManager")
-player = NodePath("Actors/Player")
-end_screen = NodePath("EndScreen")
-hud = NodePath("HUD")
+[node name="Level2" type="Node2D" unique_id=169069877]
+script = ExtResource("1_0ourt")
 
 [node name="NightEffect" type="CanvasModulate" parent="." unique_id=1657195542]
 color = Color(0.25882354, 0.23921569, 0.40784314, 1)
@@ -37,15 +34,21 @@ tile_map_data = PackedByteArray("AAALAAAAAAAGAC8AAAALAAEAAAAGADAAAAAMAAAAAAAHAC8
 tile_set = ExtResource("3_5orea")
 
 [node name="FurnitureBack0" type="TileMapLayer" parent="Ground" unique_id=1485218970]
+tile_map_data = PackedByteArray("AAAHAAIAAAAGABYAAAAIAAIAAAAFABYAAAAIAAAAAAAJACYAAAAHAAMAAAAGABcAAAAIAAMAAAAFABcAAAAJAAIAAAAHABYAAAAJAAMAAAAHABcAAAA=")
 tile_set = ExtResource("4_0ourt")
 
 [node name="FurnitureBack1" type="TileMapLayer" parent="Ground" unique_id=2054317302]
+tile_map_data = PackedByteArray("AAAHAAEAAAAOACEAAAAHAAIAAAAOACIAAAAIAAEAAAAPACEAAAAIAAIAAAAPACIAAAA=")
 tile_set = ExtResource("4_0ourt")
 
 [node name="FurnitureBack2" type="TileMapLayer" parent="Ground" unique_id=1446341142]
 tile_set = ExtResource("4_0ourt")
 
 [node name="Actors" type="Node2D" parent="." unique_id=1001583594]
+
+[node name="CoffeePickup" parent="Actors" unique_id=698757758 instance=ExtResource("15_0ourt")]
+unique_name_in_owner = true
+grid_position = Vector2i(9, 2)
 
 [node name="Player" parent="Actors" unique_id=1310945894 node_paths=PackedStringArray("plants_layer", "obstacle_layers") instance=ExtResource("5_w200a")]
 unique_name_in_owner = true

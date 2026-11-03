@@ -3,7 +3,7 @@ extends GridActor
 
 signal vision_changed
 
-enum State { PATROL, CHASE, RETURN }
+enum State { PATROL, CHASE, RETURN, INVESTIGATE }
 
 const DIRS_4: Array[Vector2i] = [
 	Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT
@@ -20,6 +20,7 @@ const FLASHLIGHT_ROTATION: Dictionary = {"up": 0, "right": 90, "down": 180, "lef
 
 @export_group("AI & Difficulty")
 @export_range(2, 10) var diagonal_interval: int = 2
+@export var investigate_wait_turns: int = 2
 
 @export_group("Vision")
 @export var vision_range: int = 6
@@ -31,6 +32,7 @@ const FLASHLIGHT_ROTATION: Dictionary = {"up": 0, "right": 90, "down": 180, "lef
 @export var patrol_color: Color = Color("fff4a3")
 @export var chase_color: Color = Color("4ac6ff")
 @export var spotted_color: Color = Color("ff3333")
+@export var investigate_color: Color = Color("ffaa00")
 
 var current_state: State = State.PATROL
 var current_waypoint_index: int = 0
@@ -43,6 +45,9 @@ var last_known_facing: Vector2i = Vector2i.DOWN
 var start_position: Vector2i = Vector2i.ZERO
 var last_completed_grid_pos: Vector2i = Vector2i.ZERO
 var flashlight_wide: bool = false
+
+var investigate_target: Vector2i = Vector2i(-1, -1)
+var investigate_timer: int = 0
 
 @onready var alert_icon: StatusIcon = %AlertIcon
 @onready var flashlight: PointLight2D = %Flashlight
@@ -76,6 +81,8 @@ func _draw() -> void:
 		draw_color = Color(spotted_color.r, spotted_color.g, spotted_color.b, 0.4)
 	elif current_state == State.CHASE:
 		draw_color = Color(chase_color.r, chase_color.g, chase_color.b, 0.35)
+	elif current_state == State.INVESTIGATE:
+		draw_color = Color(investigate_color.r, investigate_color.g, investigate_color.b, 0.35)
 	else:
 		draw_color = Color(patrol_color.r, patrol_color.g, patrol_color.b, 0.3)
 
@@ -92,6 +99,8 @@ func take_turn() -> void:
 			process_chase_turn()
 		State.RETURN:
 			process_return_turn()
+		State.INVESTIGATE:
+			process_investigate_turn()
 
 
 # --- Turns by state ---
@@ -141,6 +150,50 @@ func process_return_turn() -> void:
 	if not move_towards(target, true, false):
 		current_waypoint_index = target_index
 		current_state = State.PATROL
+
+
+func process_investigate_turn() -> void:
+	if investigate_target == Vector2i(-1, -1):
+		current_state = State.RETURN
+		return
+
+	var dist: int = Utils.chebyshev_distance(grid_position, investigate_target)
+
+	# Se detiene en la celda adyacente (distancia 1) sin pisar el charco de café
+	if dist <= 1:
+		var look_dir: Vector2i = investigate_target - grid_position
+		facing_direction = Utils.vector_to_cardinal(look_dir, facing_direction)
+		update_flashlight()
+		Utils.play_animation(animated_sprite, "idle", facing_direction)
+
+		investigate_timer += 1
+		if investigate_timer >= investigate_wait_turns:
+			investigate_timer = 0
+			investigate_target = Vector2i(-1, -1)
+			current_state = State.RETURN
+			update_question_marker()
+		return
+
+	# Si aún está lejos de la celda del impacto, camina hacia allá
+	if not move_towards(investigate_target, true, false):
+		var look_dir: Vector2i = investigate_target - grid_position
+		facing_direction = Utils.vector_to_cardinal(look_dir, facing_direction)
+		update_flashlight()
+		Utils.play_animation(animated_sprite, "idle", facing_direction)
+		investigate_timer += 1
+		if investigate_timer >= investigate_wait_turns:
+			investigate_timer = 0
+			investigate_target = Vector2i(-1, -1)
+			current_state = State.RETURN
+			update_question_marker()
+
+
+func investigate_noise(noise_cell: Vector2i) -> void:
+	investigate_target = noise_cell
+	investigate_timer = 0
+	current_state = State.INVESTIGATE
+	update_flashlight()
+	update_question_marker()
 
 
 func return_to_start() -> void:
@@ -355,12 +408,17 @@ func update_question_marker() -> void:
 	if question_icon == null:
 		return
 
-	var is_searching: bool = current_state == State.CHASE and not is_player_in_sight
+	var is_searching: bool = (current_state == State.CHASE and not is_player_in_sight) or current_state == State.INVESTIGATE
 	if not is_searching:
 		question_icon.hide_icon()
 		return
 
-	var cell_center: Vector2 = Utils.grid_to_world(last_known_position, obstacle_layers)
+	var target: Vector2i = last_known_position if current_state == State.CHASE else investigate_target
+	if target == Vector2i(-1, -1):
+		question_icon.hide_icon()
+		return
+
+	var cell_center: Vector2 = Utils.grid_to_world(target, obstacle_layers)
 	question_icon.global_position = cell_center + Vector2(0, -28)
 	if not question_icon.visible:
 		question_icon.show_icon()
@@ -395,5 +453,7 @@ func update_flashlight_color() -> void:
 		flashlight.color = spotted_color
 	elif current_state == State.CHASE:
 		flashlight.color = chase_color
+	elif current_state == State.INVESTIGATE:
+		flashlight.color = investigate_color
 	else:
 		flashlight.color = patrol_color
