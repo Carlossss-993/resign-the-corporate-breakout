@@ -22,8 +22,8 @@ var turns_taken: int = 0
 
 
 func _ready() -> void:
-	if player == null or guards.is_empty():
-		push_error("TurnManager needs a player and at least one guard assigned")
+	if player == null:
+		push_error("TurnManager needs a reference to the Player node.")
 		return
 	player.player_moved.connect(on_player_moved)
 
@@ -133,7 +133,7 @@ func check_guard_vision(guard: Guard, count_lost_turn: bool = true, ignore_hidin
 	if in_sight:
 		if not was_in_sight:
 			guard.show_alert()
-			alert_nearby_guards(guard) # <-- Alertar a los demás
+			alert_nearby_guards(guard)
 		guard.last_known_position = player.grid_position
 		guard.last_known_facing = Utils.string_to_dir(player.facing_direction)
 		guard.turns_lost_sight = 0
@@ -152,7 +152,7 @@ func alert_nearby_guards(spotter: Guard) -> void:
 	for other_guard: Guard in guards:
 		if other_guard == spotter:
 			continue
-		
+
 		var dist: int = Utils.chebyshev_distance(spotter.grid_position, other_guard.grid_position)
 		if dist <= guard_alert_radius:
 			other_guard.last_known_position = player.grid_position

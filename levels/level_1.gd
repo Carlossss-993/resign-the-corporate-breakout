@@ -15,7 +15,7 @@ const PATH_TO_ELEVATOR: Array[Vector2i] = [
 	Vector2i(9, 15), Vector2i(5, 15), Vector2i(5, 14),
 ]
 
-@export var skip_intro_debug: bool = true
+@export var skip_intro_debug: bool = false
 
 var boss_intro: Array[Dictionary] = [
 	{
@@ -67,6 +67,9 @@ func _ready() -> void:
 		turn_manager.turn_updated.connect(_on_turn_updated)
 		turn_manager.level_completed.connect(_on_level_completed)
 		turn_manager.player_captured.connect(_on_player_captured)
+
+	if hud:
+		hud.visible = true
 
 	if GameState.intro_seen or skip_intro_debug:
 		return
