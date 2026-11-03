@@ -1,6 +1,8 @@
 class_name Guard
 extends GridActor
 
+signal vision_changed
+
 enum State { PATROL, CHASE, RETURN }
 
 const DIRS_4: Array[Vector2i] = [
@@ -48,15 +50,11 @@ var flashlight_wide: bool = false
 
 func _ready() -> void:
 	super()
+	vision_changed.connect(queue_redraw)
 	if question_icon:
 		question_icon.top_level = true
 	start_position = grid_position
 	update_flashlight()
-
-
-func _process(_delta: float) -> void:
-	if debug_draw_vision:
-		queue_redraw()
 
 
 func _draw() -> void:
@@ -64,11 +62,18 @@ func _draw() -> void:
 		return
 
 	var tile_size: Vector2 = Vector2(Utils.get_base_layer(obstacle_layers).tile_set.tile_size)
-	var color: Color = Color(1.0, 0.2, 0.2, 0.35) if current_state == State.CHASE else Color(1.0, 0.9, 0.2, 0.3)
+	var draw_color: Color
+
+	if is_player_in_sight:
+		draw_color = Color(spotted_color.r, spotted_color.g, spotted_color.b, 0.4)
+	elif current_state == State.CHASE:
+		draw_color = Color(chase_color.r, chase_color.g, chase_color.b, 0.35)
+	else:
+		draw_color = Color(patrol_color.r, patrol_color.g, patrol_color.b, 0.3)
 
 	for cell: Vector2i in get_vision_tiles():
 		var center: Vector2 = to_local(Utils.grid_to_world(cell, obstacle_layers))
-		draw_rect(Rect2(center - tile_size / 2.0, tile_size), color)
+		draw_rect(Rect2(center - tile_size / 2.0, tile_size), draw_color)
 
 
 func take_turn() -> void:
@@ -359,6 +364,7 @@ func update_flashlight() -> void:
 	update_flashlight_width()
 	update_flashlight_rotation()
 	update_flashlight_color()
+	vision_changed.emit()
 
 
 func update_flashlight_width() -> void:
