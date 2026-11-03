@@ -1,0 +1,7 @@
+[gd_resource type="Theme" format=3 uid="uid://cbrijulspoqdl"]
+
+[ext_resource type="FontFile" uid="uid://b83effipevvug" path="res://assets/fonts/IBMPlexMono-Regular.ttf" id="1_rqugq"]
+
+[resource]
+default_font = ExtResource("1_rqugq")
+default_font_size = 16

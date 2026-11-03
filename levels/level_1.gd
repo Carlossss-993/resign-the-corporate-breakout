@@ -15,7 +15,7 @@ const PATH_TO_ELEVATOR: Array[Vector2i] = [
 	Vector2i(9, 15), Vector2i(5, 15), Vector2i(5, 14),
 ]
 
-@export var skip_intro_debug: bool = true
+@export var skip_intro_debug: bool = false
 
 var boss_intro: Array[Dictionary] = [
 	{
