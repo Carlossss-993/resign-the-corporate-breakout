@@ -12,6 +12,7 @@ extends Node2D
 @export var player: Player
 @export var end_screen: EndScreen
 @export var hud: HUD
+@export var dialogue_ui: DialogueUI
 
 var level_id: String:
 	get:
@@ -33,6 +34,8 @@ func setup_level_base() -> void:
 		end_screen = %EndScreen
 	if hud == null and has_node("%HUD"):
 		hud = %HUD
+	if dialogue_ui == null and has_node("%DialogueUI"):
+		dialogue_ui = %DialogueUI
 
 	if turn_manager:
 		turn_manager.turn_updated.connect(_on_turn_updated)

@@ -13,6 +13,7 @@
 [ext_resource type="AudioStream" uid="uid://dtji2fykdimgj" path="res://assets/audio/victory.mp3" id="16_oqlok"]
 [ext_resource type="PackedScene" uid="uid://divo673owpk4g" path="res://actors/boss.tscn" id="16_udfhf"]
 [ext_resource type="PackedScene" uid="uid://c1lioj24o2wy" path="res://ui/hud.tscn" id="17_lrvbd"]
+[ext_resource type="PackedScene" uid="uid://ekbyi5br5fcq" path="res://ui/hint.tscn" id="18_oqlok"]
 [ext_resource type="Script" uid="uid://ig4p8g7yrucx" path="res://levels/turn_manager.gd" id="18_xapae"]
 [ext_resource type="Texture2D" uid="uid://w62fwnoaj1lt" path="res://assets/lighting/light_texture_circle.webp" id="19_r0nt2"]
 [ext_resource type="AudioStream" uid="uid://dbei1xh1e5alo" path="res://assets/audio/elevator_ding.mp3" id="20_xv8d5"]
@@ -143,6 +144,17 @@ animations = [{
 
 [node name="Level1" type="Node2D" unique_id=169069877]
 script = ExtResource("1_i6od7")
+skip_intro_debug = false
+stairs_down_trigger_cells = Array[Vector2i]([Vector2i(10, 13), Vector2i(9, 13)])
+stairs_down_target_cell = Vector2i(3, 17)
+elevator_trigger_cells = Array[Vector2i]([Vector2i(10, 14), Vector2i(9, 14)])
+elevator_target_cell = Vector2i(4, 12)
+stairs_up_trigger_cells = Array[Vector2i]([Vector2i(11, 15), Vector2i(11, 14)])
+stairs_up_target_cell = Vector2i(25, 1)
+guard_trigger_cells = Array[Vector2i]([Vector2i(16, 12), Vector2i(17, 12)])
+guard_target_cell = Vector2i(24, 5)
+plant_trigger_cells = Array[Vector2i]([Vector2i(16, 12), Vector2i(17, 12)])
+plant_target_cell = Vector2i(15, 12)
 floor_number = 4
 floor_name = "Oficinas Principales"
 
@@ -207,7 +219,7 @@ unique_name_in_owner = true
 [node name="Foreground" type="Node2D" parent="." unique_id=1505530602]
 
 [node name="PlantsLayer" type="TileMapLayer" parent="Foreground" unique_id=366065877]
-tile_map_data = PackedByteArray("AAABAAAAAAAGAAcAAAABAAEAAAAGAAgAAAABAAIAAAAGAAkAAAAEAAEAAAAGAAoAAAAEAAIAAAAGAAsAAAAMAAEAAAAGAAoAAAAMAAIAAAAGAAsAAAAYAAwAAAAGAAcAAAAYAA0AAAAGAAgAAAAYAA4AAAAGAAkAAAATAA4AAAAGAAwAAAATAA8AAAAGAA0AAAAUAA4AAAAGAAwAAAAUAA8AAAAGAA0AAAACAAwAAAAGAAcAAAACAA0AAAAGAAgAAAACAA4AAAAGAAkAAAAHAAwAAAAGAAcAAAAHAA0AAAAGAAgAAAAHAA4AAAAGAAkAAAAbAAAAAAAGAAwAAAAbAAEAAAAGAA0AAAAbAAIAAAAGAA4AAAAKAAkAAAAGAAoAAAAKAAoAAAAGAAsAAAAPAAoAAAAGAAoAAAAPAAsAAAAGAAsAAAA=")
+tile_map_data = PackedByteArray("AAABAAAAAAAGAAcAAAABAAEAAAAGAAgAAAABAAIAAAAGAAkAAAAEAAEAAAAGAAoAAAAEAAIAAAAGAAsAAAAMAAEAAAAGAAoAAAAMAAIAAAAGAAsAAAAYAAwAAAAGAAcAAAAYAA0AAAAGAAgAAAAYAA4AAAAGAAkAAAACAAwAAAAGAAcAAAACAA0AAAAGAAgAAAACAA4AAAAGAAkAAAAHAAwAAAAGAAcAAAAHAA0AAAAGAAgAAAAHAA4AAAAGAAkAAAAbAAAAAAAGAAwAAAAbAAEAAAAGAA0AAAAbAAIAAAAGAA4AAAAKAAkAAAAGAAoAAAAKAAoAAAAGAAsAAAAPAAoAAAAGAAoAAAAPAAsAAAAGAAsAAAATAA8AAAAGAAoAAAAUAA8AAAAGAAoAAAA=")
 tile_set = ExtResource("9_bgw3c")
 
 [node name="FurnitureForward0" type="TileMapLayer" parent="Foreground" unique_id=838996080]
@@ -316,3 +328,9 @@ victory_sound = ExtResource("16_oqlok")
 [node name="HUD" parent="." unique_id=1541671604 instance=ExtResource("17_lrvbd")]
 unique_name_in_owner = true
 visible = false
+
+[node name="HintWASD" parent="." unique_id=696815056 instance=ExtResource("18_oqlok")]
+
+[node name="HintPlants" parent="." unique_id=357448850 instance=ExtResource("18_oqlok")]
+text = "Presiona Espacio para pasar el turno y mantenerte oculto"
+hint_type = 1

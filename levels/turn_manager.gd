@@ -74,7 +74,24 @@ func on_player_moved(_new_grid_pos: Vector2i) -> void:
 	for guard: Guard in guards:
 		check_guard_vision(guard)
 
+	await check_event_triggers(player.grid_position)
+
 	player.unlock_input()
+
+
+func check_event_triggers(current_cell: Vector2i) -> void:
+	var triggers: Array[Node] = get_tree().get_nodes_in_group("event_triggers")
+	var level = get_tree().current_scene
+	var dialogue_ui: DialogueUI = null
+	
+	if "dialogue_ui" in level:
+		dialogue_ui = level.dialogue_ui
+	elif level.has_node("%DialogueUI"):
+		dialogue_ui = level.get_node("%DialogueUI") as DialogueUI
+
+	for trigger in triggers:
+		if trigger is EventTrigger and trigger.is_triggered_by(current_cell):
+			await trigger.execute_event(player, dialogue_ui)
 
 
 func is_exit_cell(cell: Vector2i) -> bool:

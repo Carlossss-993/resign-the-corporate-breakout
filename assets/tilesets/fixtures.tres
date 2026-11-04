@@ -1,0 +1,37 @@
+[gd_resource type="TileSet" format=3 uid="uid://detjys721l63i"]
+
+[ext_resource type="Texture2D" uid="uid://by62g607uts7d" path="res://assets/tilesets/19_Hospital_48x48.png" id="1_ogx47"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lrvbd"]
+texture = ExtResource("1_ogx47")
+texture_region_size = Vector2i(48, 48)
+13:20/0 = 0
+14:20/0 = 0
+7:49/0 = 0
+7:50/0 = 0
+8:50/0 = 0
+8:49/0 = 0
+9:50/0 = 0
+9:49/0 = 0
+2:58/0 = 0
+2:58/0/custom_data_0 = true
+2:59/0 = 0
+2:59/0/custom_data_0 = true
+3:59/0 = 0
+3:59/0/custom_data_0 = true
+3:58/0 = 0
+3:58/0/custom_data_0 = true
+6:48/0 = 0
+6:48/0/custom_data_0 = true
+6:47/0 = 0
+6:47/0/custom_data_0 = true
+7:47/0 = 0
+7:47/0/custom_data_0 = true
+7:48/0 = 0
+7:48/0/custom_data_0 = true
+
+[resource]
+tile_size = Vector2i(48, 48)
+custom_data_layer_0/name = "is_walkable"
+custom_data_layer_0/type = 1
+sources/0 = SubResource("TileSetAtlasSource_lrvbd")

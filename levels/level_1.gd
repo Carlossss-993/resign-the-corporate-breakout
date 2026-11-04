@@ -14,7 +14,29 @@ const PATH_TO_ELEVATOR: Array[Vector2i] = [
 	Vector2i(9, 15), Vector2i(5, 15), Vector2i(5, 14),
 ]
 
+@export_group("Debug Flags")
 @export var skip_intro_debug: bool = true
+@export var skip_events_debug: bool = false
+
+@export_group("Event Triggers - Stairs Down")
+@export var stairs_down_trigger_cells: Array[Vector2i] = []
+@export var stairs_down_target_cell: Vector2i = Vector2i.ZERO
+
+@export_group("Event Triggers - Elevator")
+@export var elevator_trigger_cells: Array[Vector2i] = []
+@export var elevator_target_cell: Vector2i = Vector2i.ZERO
+
+@export_group("Event Triggers - Stairs Up")
+@export var stairs_up_trigger_cells: Array[Vector2i] = []
+@export var stairs_up_target_cell: Vector2i = Vector2i.ZERO
+
+@export_group("Event Triggers - Guard")
+@export var guard_trigger_cells: Array[Vector2i] = []
+@export var guard_target_cell: Vector2i = Vector2i.ZERO
+
+@export_group("Event Triggers - Plant")
+@export var plant_trigger_cells: Array[Vector2i] = []
+@export var plant_target_cell: Vector2i = Vector2i.ZERO
 
 var boss_intro: Array[Dictionary] = [
 	{
@@ -50,7 +72,6 @@ var player_intro: Array[Dictionary] = [
 @onready var boss_sprite: AnimatedSprite2D = boss.get_node("AnimatedSprite2D")
 @onready var elevator_sprite: AnimatedSprite2D = %Elevator
 @onready var elevator_audio: AudioStreamPlayer2D = %ElevatorAudio
-@onready var dialogue_ui: DialogueUI = %DialogueUI
 @onready var base_layer: TileMapLayer = %BaseLayer
 
 
@@ -58,6 +79,9 @@ func _ready() -> void:
 	super()
 	boss.visible = false
 	elevator_sprite.play("closed")
+
+	if not skip_events_debug:
+		setup_narrative_events()
 
 	if GameState.intro_seen or skip_intro_debug:
 		hud.visible = true
@@ -69,6 +93,93 @@ func _ready() -> void:
 	if player:
 		player.set_process_unhandled_input(false)
 	get_tree().create_timer(0.5).timeout.connect(run_intro_cutscene)
+
+
+# --- Creación programática de los 5 EventTriggers ---
+func setup_narrative_events() -> void:
+	# 1. Escaleras hacia abajo (Mantenimiento)
+	create_event(
+		stairs_down_trigger_cells,
+		stairs_down_target_cell,
+		[
+			{
+				"name": "Jugador",
+				"text": "Las escaleras hacia abajo están fuera de servicio por mantenimiento desde hace 7 meses...",
+				"side": "left",
+				"portrait_left": PLAYER_PORTRAIT,
+			}
+		]
+	)
+
+	# 2. Ascensor (Requiere tarjeta)
+	create_event(
+		elevator_trigger_cells,
+		elevator_target_cell,
+		[
+			{
+				"name": "Jugador",
+				"text": "El ascensor no se moverá a menos que tenga la tarjeta de acceso de alta seguridad.",
+				"side": "left",
+				"portrait_left": PLAYER_PORTRAIT,
+			}
+		]
+	)
+
+	# 3. Escaleras hacia arriba (Subir al piso 10)
+	create_event(
+		stairs_up_trigger_cells,
+		stairs_up_target_cell,
+		[
+			{
+				"name": "Jugador",
+				"text": "Tendré que subir hasta el piso 10 para robarle la tarjeta de acceso al jefe si quiero escapar.",
+				"side": "left",
+				"portrait_left": PLAYER_PORTRAIT,
+			}
+		]
+	)
+
+	# 4. Guardia (Esquivar la patrulla)
+	create_event(
+		guard_trigger_cells,
+		guard_target_cell,
+		[
+			{
+				"name": "Jugador",
+				"text": "Hay un guardia patrullando este sector... Tendré que vigilar el alcance de su linterna para esquivarlo.",
+				"side": "left",
+				"portrait_left": PLAYER_PORTRAIT,
+			}
+		]
+	)
+
+	# 5. Planta (Ocultarse)
+	create_event(
+		plant_trigger_cells,
+		plant_target_cell,
+		[
+			{
+				"name": "Jugador",
+				"text": "Si se acerca demasiado o viene en mi dirección, puedo meterme en las plantas para no ser visto.",
+				"side": "left",
+				"portrait_left": PLAYER_PORTRAIT,
+			}
+		]
+	)
+
+
+func create_event(trigger_cells: Array[Vector2i], target_cell: Vector2i, lines: Array[Dictionary]) -> void:
+	if trigger_cells.is_empty():
+		return
+
+	var trigger: EventTrigger = EventTrigger.new()
+	trigger.trigger_cells = trigger_cells
+	trigger.target_camera_cell = target_cell
+	trigger.dialogue_lines = lines
+	trigger.one_shot = true
+	trigger.target_zoom = Vector2(2, 2)
+	trigger.transition_duration = 0.8
+	add_child(trigger)
 
 
 func run_intro_cutscene() -> void:

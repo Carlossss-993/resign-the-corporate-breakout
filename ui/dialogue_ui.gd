@@ -9,6 +9,7 @@ const SPEAKER_MARGIN: float = 40.0
 const FADE_TIME: float = 0.3
 
 @export var text_speed: float = 0.03
+@export var voice_sound: AudioStream = preload("res://assets/audio/gibberish.mp3") # Ruta a tu audio .mp3
 
 var dialogue_queue: Array[Dictionary] = []
 var current_line_index: int = 0
@@ -26,14 +27,22 @@ var prompt_tween: Tween
 @onready var dialogue_text: RichTextLabel = $TextBox/MarginContainer/VBoxContainer/DialogueText
 @onready var next_prompt: Control = $TextBox/MarginContainer/VBoxContainer/NextPrompt
 
+@onready var voice_player: AudioStreamPlayer = AudioStreamPlayer.new()
+
 
 func _ready() -> void:
+	add_child(voice_player)
+	if voice_sound:
+		voice_player.stream = voice_sound
+	voice_player.finished.connect(_on_voice_finished)
+
 	reset_ui()
 	visible = false
 
 
 func reset_ui() -> void:
 	stop_prompt_animation()
+	stop_voice_sound()
 	dim_overlay.color.a = 0.0
 	for node: CanvasItem in [text_box, speaker_box, portrait_left, portrait_right]:
 		node.modulate = Color(1.0, 1.0, 1.0, 0.0)
@@ -95,9 +104,49 @@ func show_current_line() -> void:
 		total_chars = dialogue_text.text.length()
 
 	is_typing = true
+	start_voice_sound(line)
+
 	text_tween = create_tween()
 	text_tween.tween_property(dialogue_text, "visible_ratio", 1.0, total_chars * text_speed)
 	text_tween.tween_callback(on_typing_finished)
+
+
+# --- Sistema de Audio Modular para Voces ---
+func start_voice_sound(line: Dictionary) -> void:
+	if voice_player.stream == null:
+		return
+
+	var speaker_name: String = line.get("name", "")
+	var explicit_pitch: float = line.get("pitch", 0.0)
+
+	# Asignación de Pitch (Graves / Agudos)
+	var pitch: float = 1.0
+	if explicit_pitch > 0.0:
+		pitch = explicit_pitch
+	else:
+		match speaker_name:
+			"Jefe": pitch = 0.75       # Voz grave
+			"Jugador": pitch = 1.15    # Voz estándar/ligeramente aguda
+			_: pitch = 1.00 + float(absi(speaker_name.hash()) % 30) / 100.0 # Tono único por nombre
+
+	# Ligera variación aleatoria por línea para mayor naturalidad
+	voice_player.pitch_scale = pitch + randf_range(-0.03, 0.03)
+
+	# Reproducir desde un punto aleatorio dentro de los primeros 4 segundos
+	var start_offset: float = randf_range(0.0, 4.0)
+	voice_player.play(start_offset)
+
+
+func _on_voice_finished() -> void:
+	# Si sigue escribiendo y el audio de 8s termina, hace bucle desde otra posición aleatoria
+	if is_typing and voice_player.stream != null:
+		var start_offset: float = randf_range(0.0, 4.0)
+		voice_player.play(start_offset)
+
+
+func stop_voice_sound() -> void:
+	if voice_player.is_playing():
+		voice_player.stop()
 
 
 func update_portraits(line: Dictionary, side: String) -> void:
@@ -134,6 +183,7 @@ func move_speaker_box(side: String) -> void:
 
 func on_typing_finished() -> void:
 	is_typing = false
+	stop_voice_sound()
 	start_prompt_animation()
 
 
@@ -171,6 +221,7 @@ func advance_dialogue() -> void:
 func close_dialogue() -> void:
 	is_active = false
 	stop_prompt_animation()
+	stop_voice_sound()
 
 	var tween: Tween = create_tween().set_parallel(true)
 	tween.tween_property(dim_overlay, "color:a", 0.0, FADE_TIME)

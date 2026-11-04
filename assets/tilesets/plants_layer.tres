@@ -1,0 +1,21 @@
+[gd_resource type="TileSet" format=3 uid="uid://cs288rl36jt6f"]
+
+[ext_resource type="Texture2D" uid="uid://d3gmpngmhliy1" path="res://assets/tilesets/Modern_Office_Black_Shadow_48x48.png" id="1_tchp6"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_65or1"]
+texture = ExtResource("1_tchp6")
+texture_region_size = Vector2i(48, 48)
+6:7/0 = 0
+6:8/0 = 0
+6:9/0 = 0
+6:10/0 = 0
+6:11/0 = 0
+6:12/0 = 0
+6:13/0 = 0
+6:14/0 = 0
+
+[resource]
+tile_size = Vector2i(48, 48)
+custom_data_layer_0/name = "is_walkable"
+custom_data_layer_0/type = 1
+sources/0 = SubResource("TileSetAtlasSource_65or1")
