@@ -41,6 +41,7 @@ theme_override_constants/margin_bottom = 15
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer" unique_id=1951138337]
 layout_mode = 2
+theme_override_constants/separation = 12
 
 [node name="FloorLabel" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=357385762]
 unique_name_in_owner = true
@@ -51,8 +52,10 @@ vertical_alignment = 1
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=977961703]
 layout_mode = 2
 theme_override_constants/separation = 80
+alignment = 1
 
 [node name="CupsContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1441393699]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 4
 

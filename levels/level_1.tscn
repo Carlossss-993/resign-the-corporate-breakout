@@ -144,7 +144,7 @@ animations = [{
 
 [node name="Level1" type="Node2D" unique_id=169069877]
 script = ExtResource("1_i6od7")
-skip_intro_debug = false
+skip_events_debug = true
 stairs_down_trigger_cells = Array[Vector2i]([Vector2i(10, 13), Vector2i(9, 13)])
 stairs_down_target_cell = Vector2i(3, 17)
 elevator_trigger_cells = Array[Vector2i]([Vector2i(10, 14), Vector2i(9, 14)])
@@ -155,7 +155,7 @@ guard_trigger_cells = Array[Vector2i]([Vector2i(16, 12), Vector2i(17, 12)])
 guard_target_cell = Vector2i(24, 5)
 plant_trigger_cells = Array[Vector2i]([Vector2i(16, 12), Vector2i(17, 12)])
 plant_target_cell = Vector2i(15, 12)
-floor_number = 4
+floor_number = 3
 floor_name = "Oficinas Principales"
 
 [node name="NightEffect" type="CanvasModulate" parent="." unique_id=1657195542]

@@ -39,8 +39,6 @@ func setup_visual_highlight() -> void:
 func align_to_grid_cell() -> void:
 	var layers: Array[TileMapLayer] = []
 	var player: Player = get_tree().get_first_node_in_group("player") as Player
-	if player == null:
-		player = get_tree().current_scene.find_child("Player", true, false) as Player
 
 	if player and not player.obstacle_layers.is_empty():
 		layers = player.obstacle_layers

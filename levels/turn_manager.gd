@@ -10,7 +10,6 @@ signal player_captured
 @export var guards: Array[Guard] = []
 
 @export_group("Level Goals")
-@export var exit_cell: Vector2i = Vector2i(-1, -1)
 @export var exit_cells: Array[Vector2i] = []
 
 @export_group("Difficulty & Stealth Rules")
@@ -33,7 +32,6 @@ func make_noise(noise_cell: Vector2i, radius: int = -1) -> void:
 	var effective_radius: int = radius if radius > 0 else guard_alert_radius
 
 	for guard: Guard in guards:
-		# Si el guardia ya está persiguiendo activamente al jugador, ignora el ruido distractor
 		if guard.current_state == Guard.State.CHASE:
 			continue
 
@@ -95,8 +93,6 @@ func check_event_triggers(current_cell: Vector2i) -> void:
 
 
 func is_exit_cell(cell: Vector2i) -> bool:
-	if cell == exit_cell and exit_cell != Vector2i(-1, -1):
-		return true
 	return exit_cells.has(cell)
 
 

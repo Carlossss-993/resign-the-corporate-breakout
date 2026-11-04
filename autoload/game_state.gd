@@ -4,6 +4,7 @@ const SAVE_PATH: String = "user://save_data.cfg"
 const MAIN_MENU_PATH: String = "res://ui/main_menu.tscn"
 
 var intro_seen: bool = false
+var cups_unlocked: bool = false # <-- Estado de desbloqueo de tazas en HUD
 var level_records: Dictionary = {}
 
 @export var levels: Array[String] = [
@@ -15,6 +16,12 @@ var current_level_index: int = 0
 
 func _ready() -> void:
 	load_records()
+
+
+func sync_level_index(scene_path: String) -> void:
+	var index: int = levels.find(scene_path)
+	if index != -1:
+		current_level_index = index
 
 
 func go_to_next_level() -> void:
@@ -34,6 +41,7 @@ func restart_level() -> void:
 
 func go_to_menu() -> void:
 	current_level_index = 0
+	cups_unlocked = false # <-- Reinicia el estado al volver al menú
 	get_tree().change_scene_to_file(MAIN_MENU_PATH)
 
 

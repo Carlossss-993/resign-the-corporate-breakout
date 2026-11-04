@@ -2,8 +2,6 @@ extends LevelBase
 
 const BOSS_SPEED: float = 240.0
 const BOSS_SPAWN_CELL: Vector2i = Vector2i(5, 14)
-const BOSS_PORTRAIT: Texture2D = preload("res://assets/portraits/Boss_Portrait.png")
-const PLAYER_PORTRAIT: Texture2D = preload("res://assets/portraits/Player_Portrait.png")
 
 const PATH_TO_PLAYER: Array[Vector2i] = [
 	Vector2i(5, 15), Vector2i(9, 15), Vector2i(9, 11),
@@ -39,33 +37,13 @@ const PATH_TO_ELEVATOR: Array[Vector2i] = [
 @export var plant_target_cell: Vector2i = Vector2i.ZERO
 
 var boss_intro: Array[Dictionary] = [
-	{
-		"name": "Jefe",
-		"text": "¡Vaya, vaya! Veo que sigues aquí. Excelente compromiso con la empresa.",
-		"side": "right",
-		"portrait_right": BOSS_PORTRAIT,
-	},
-	{
-		"name": "Jefe",
-		"text": "Necesito que te quedes toda la noche revisando los servidores. ¡Hay que sudar la camiseta!",
-		"side": "right",
-		"portrait_right": BOSS_PORTRAIT,
-	},
+	DialogueLines.boss("¡Vaya, vaya! Veo que sigues aquí. Excelente compromiso con la empresa."),
+	DialogueLines.boss("Necesito que te quedes toda la noche revisando los servidores. ¡Hay que sudar la camiseta!")
 ]
 
 var player_intro: Array[Dictionary] = [
-	{
-		"name": "Jugador",
-		"text": "A la mierda, me voy a casa. ¡No pienso quedarme toda la noche!",
-		"side": "left",
-		"portrait_left": PLAYER_PORTRAIT,
-	},
-	{
-		"name": "Jugador",
-		"text": "¡Y que se joda el jefe!",
-		"side": "left",
-		"portrait_left": PLAYER_PORTRAIT,
-	},
+	DialogueLines.player("A la mierda, me voy a casa. ¡No pienso quedarme toda la noche!"),
+	DialogueLines.player("¡Y que se joda el jefe!")
 ]
 
 @onready var boss: Node2D = %Boss
@@ -95,91 +73,36 @@ func _ready() -> void:
 	get_tree().create_timer(0.5).timeout.connect(run_intro_cutscene)
 
 
-# --- Creación programática de los 5 EventTriggers ---
 func setup_narrative_events() -> void:
-	# 1. Escaleras hacia abajo (Mantenimiento)
 	create_event(
 		stairs_down_trigger_cells,
 		stairs_down_target_cell,
-		[
-			{
-				"name": "Jugador",
-				"text": "Las escaleras hacia abajo están fuera de servicio por mantenimiento desde hace 7 meses...",
-				"side": "left",
-				"portrait_left": PLAYER_PORTRAIT,
-			}
-		]
+		[DialogueLines.player("Las escaleras hacia abajo están fuera de servicio por mantenimiento desde hace 7 meses...")]
 	)
 
-	# 2. Ascensor (Requiere tarjeta)
 	create_event(
 		elevator_trigger_cells,
 		elevator_target_cell,
-		[
-			{
-				"name": "Jugador",
-				"text": "El ascensor no se moverá a menos que tenga la tarjeta de acceso de alta seguridad.",
-				"side": "left",
-				"portrait_left": PLAYER_PORTRAIT,
-			}
-		]
+		[DialogueLines.player("El ascensor no se moverá a menos que tenga la tarjeta de acceso de alta seguridad.")]
 	)
 
-	# 3. Escaleras hacia arriba (Subir al piso 10)
 	create_event(
 		stairs_up_trigger_cells,
 		stairs_up_target_cell,
-		[
-			{
-				"name": "Jugador",
-				"text": "Tendré que subir hasta el piso 10 para robarle la tarjeta de acceso al jefe si quiero escapar.",
-				"side": "left",
-				"portrait_left": PLAYER_PORTRAIT,
-			}
-		]
+		[DialogueLines.player("Tendré que subir hasta el piso 10 para robarle la tarjeta de acceso al jefe si quiero escapar.")]
 	)
 
-	# 4. Guardia (Esquivar la patrulla)
 	create_event(
 		guard_trigger_cells,
 		guard_target_cell,
-		[
-			{
-				"name": "Jugador",
-				"text": "Hay un guardia patrullando este sector... Tendré que vigilar el alcance de su linterna para esquivarlo.",
-				"side": "left",
-				"portrait_left": PLAYER_PORTRAIT,
-			}
-		]
+		[DialogueLines.player("Hay un guardia patrullando este sector... Tendré que vigilar el alcance de su linterna para esquivarlo.")]
 	)
 
-	# 5. Planta (Ocultarse)
 	create_event(
 		plant_trigger_cells,
 		plant_target_cell,
-		[
-			{
-				"name": "Jugador",
-				"text": "Si se acerca demasiado o viene en mi dirección, puedo meterme en las plantas para no ser visto.",
-				"side": "left",
-				"portrait_left": PLAYER_PORTRAIT,
-			}
-		]
+		[DialogueLines.player("Si se acerca demasiado o viene en mi dirección, puedo meterme en las plantas para no ser visto.")]
 	)
-
-
-func create_event(trigger_cells: Array[Vector2i], target_cell: Vector2i, lines: Array[Dictionary]) -> void:
-	if trigger_cells.is_empty():
-		return
-
-	var trigger: EventTrigger = EventTrigger.new()
-	trigger.trigger_cells = trigger_cells
-	trigger.target_camera_cell = target_cell
-	trigger.dialogue_lines = lines
-	trigger.one_shot = true
-	trigger.target_zoom = Vector2(2, 2)
-	trigger.transition_duration = 0.8
-	add_child(trigger)
 
 
 func run_intro_cutscene() -> void:

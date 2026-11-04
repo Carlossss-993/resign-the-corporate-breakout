@@ -35,6 +35,10 @@ func execute_event(player: Player, dialogue_ui: DialogueUI) -> void:
 		event_finished.emit()
 		return
 
+	# Limpiar inputs acumulados antes de iniciar la cinemática o diálogo
+	if player.has_method("clear_input_buffer"):
+		player.clear_input_buffer()
+
 	var camera: Camera2D = player.camera
 	var original_zoom: Vector2 = Vector2.ONE
 	var obstacle_layers: Array[TileMapLayer] = player.obstacle_layers

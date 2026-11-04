@@ -1,9 +1,10 @@
 extends Node2D
 
-signal impacted  # <-- 1. Nueva señal para avisar el momento del impacto
+signal impacted
 
 @export var fly_duration: float = 0.55
 @export var arc_height: float = -70.0
+@export var noise_radius: int = 8 # <-- R8: Radio de ruido exportado propio para la taza
 
 var target_cell: Vector2i
 var obstacle_layers: Array[TileMapLayer] = []
@@ -42,7 +43,7 @@ func impact() -> void:
 	spawn_coffee_puddle()
 	alert_guards_nearby()
 
-	impacted.emit()  # <-- 2. Notifica que el ruido ya ocurrió y los guardias entraron en INVESTIGATE
+	impacted.emit()
 
 	var clean_tween: Tween = create_tween()
 	clean_tween.tween_interval(max(particles.lifetime if particles else 0.5, audio.stream.get_length() if audio and audio.stream else 0.8))
@@ -51,7 +52,7 @@ func impact() -> void:
 
 func spawn_coffee_puddle() -> void:
 	var puddle: Sprite2D = Sprite2D.new()
-	puddle.texture = load("res://assets/items/poodle.png")
+	puddle.texture = load("res://assets/items/puddle.png")
 	puddle.centered = true
 	puddle.y_sort_enabled = true
 	get_parent().add_child(puddle)
@@ -65,4 +66,4 @@ func spawn_coffee_puddle() -> void:
 func alert_guards_nearby() -> void:
 	var turn_manager = get_tree().get_first_node_in_group("turn_manager")
 	if turn_manager and turn_manager.has_method("make_noise"):
-		turn_manager.make_noise(target_cell, turn_manager.guard_alert_radius)
+		turn_manager.make_noise(target_cell, noise_radius) # <-- Pasa el radio propio de la taza

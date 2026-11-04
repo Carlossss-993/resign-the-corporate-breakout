@@ -39,8 +39,6 @@ func _ready() -> void:
 
 func connect_to_player() -> void:
 	player = get_tree().get_first_node_in_group("player") as Player
-	if player == null:
-		player = get_tree().current_scene.find_child("Player", true, false) as Player
 
 	if player:
 		player.player_moved.connect(_on_player_moved)

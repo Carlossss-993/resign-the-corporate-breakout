@@ -44,6 +44,7 @@ var is_aiming: bool = false
 
 func _ready() -> void:
 	super()
+	add_to_group("player") # Registra el nodo en el grupo player para todo el proyecto
 	add_child(audio_player)
 	set_camera_limits()
 	check_hiding_status()
@@ -63,9 +64,25 @@ func set_camera_limits() -> void:
 	camera.limit_bottom = used_rect.end.y * tile_size.y
 
 
+func clear_input_buffer() -> void:
+	buffered_dir = Vector2i.ZERO
+	buffered_wait = false
+
+
 # --- Input & Aiming ---
 func _unhandled_input(event: InputEvent) -> void:
-	if input_locked:
+	# Leer dirección o intención de espera
+	var dir: Vector2i = read_direction(event)
+	var wants_wait: bool = event.is_action_pressed("wait")
+
+	# Si los controles están bloqueados (ej: turno del guardia) o en movimiento, guardamos en el buffer
+	if input_locked or is_moving:
+		if dir != Vector2i.ZERO:
+			buffered_dir = dir
+			buffered_wait = false
+		elif wants_wait:
+			buffered_dir = Vector2i.ZERO
+			buffered_wait = true
 		return
 
 	if event.is_action_pressed("interact"):
@@ -91,15 +108,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		queue_redraw()
 		return
 
-	# Movimiento del jugador
-	var dir: Vector2i = read_direction(event)
-	var wants_wait: bool = event.is_action_pressed("wait")
 	if dir == Vector2i.ZERO and not wants_wait:
-		return
-
-	if is_moving:
-		buffered_dir = dir
-		buffered_wait = wants_wait
 		return
 
 	act(dir, wants_wait)
@@ -187,6 +196,7 @@ func execute_throw(target_cell: Vector2i) -> void:
 func add_cup() -> void:
 	if current_cups < max_cups:
 		current_cups += 1
+		GameState.cups_unlocked = true
 	else:
 		play_error_sound()
 
@@ -217,8 +227,7 @@ func unlock_input() -> void:
 	if buffered_wait or buffered_dir != Vector2i.ZERO:
 		var dir: Vector2i = buffered_dir
 		var wants_wait: bool = buffered_wait
-		buffered_dir = Vector2i.ZERO
-		buffered_wait = false
+		clear_input_buffer()
 		act(dir, wants_wait)
 		return
 
