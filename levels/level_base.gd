@@ -7,6 +7,15 @@ extends Node2D
 @export var exit_cells: Array[Vector2i] = []
 @export var entry_lines: Array[Dictionary] = []
 
+@export_group("Event Triggers - Stairs Down")
+@export var stairs_down_cells: Array[Vector2i] = []
+@export var stairs_down_lines: Array[String] = [
+	"No necesito bajar más, debo ir hacia arriba.",
+	"Abajo no hay nada útil, mi objetivo está en los pisos superiores.",
+	"No tiene sentido volver a bajar ahora."
+]
+@export var stairs_down_one_shot: bool = false
+
 @export_group("Node References")
 @export var turn_manager: TurnManager
 @export var player: Player
@@ -57,8 +66,24 @@ func setup_level_base() -> void:
 		player.cups_changed.connect(hud.update_cups)
 		hud.update_cups(player.current_cups)
 
+	# Evento automático para escaleras hacia abajo
+	setup_default_stairs_down()
+
 	# --- Reproducción de líneas de entrada automáticas ---
 	call_deferred("play_entry_lines")
+
+
+func setup_default_stairs_down() -> void:
+	if not stairs_down_cells.is_empty():
+		create_event(
+			stairs_down_cells,
+			Vector2i(-1, -1),
+			[],
+			Vector2(1.4, 1.4),
+			stairs_down_one_shot,
+			true, # prevent_entry: rebota al jugador sin dejarlo avanzar
+			stairs_down_lines
+		)
 
 
 func play_entry_lines() -> void:
@@ -77,18 +102,29 @@ func play_entry_lines() -> void:
 		player.set_process_unhandled_input(true)
 
 
-func create_event(trigger_cells: Array[Vector2i], target_cell: Vector2i, lines: Array[Dictionary], zoom: Vector2 = Vector2(2, 2)) -> void:
+func create_event(
+	trigger_cells: Array[Vector2i],
+	target_cell: Vector2i,
+	lines: Array[Dictionary],
+	zoom: Vector2 = Vector2(2, 2),
+	one_shot: bool = true,
+	prevent_entry: bool = false,
+	lines_pool: Array = []
+) -> EventTrigger:
 	if trigger_cells.is_empty():
-		return
+		return null
 
 	var trigger: EventTrigger = EventTrigger.new()
 	trigger.trigger_cells = trigger_cells
 	trigger.target_camera_cell = target_cell
 	trigger.dialogue_lines = lines
-	trigger.one_shot = true
+	trigger.dialogue_lines_pool = lines_pool
+	trigger.one_shot = one_shot
+	trigger.prevent_entry = prevent_entry
 	trigger.target_zoom = zoom
 	trigger.transition_duration = 0.8
 	add_child(trigger)
+	return trigger
 
 
 func _on_turn_updated(turns: int) -> void:

@@ -77,7 +77,10 @@ func setup_narrative_events() -> void:
 	create_event(
 		stairs_down_trigger_cells,
 		stairs_down_target_cell,
-		[DialogueLines.player("Las escaleras hacia abajo están fuera de servicio por mantenimiento desde hace 7 meses...")]
+		[DialogueLines.player("Las escaleras hacia abajo están fuera de servicio por mantenimiento desde hace 7 meses...")],
+		Vector2(2, 2),
+		true, # one_shot
+		true  # prevent_entry: no permite bajar la escalera
 	)
 
 	create_event(
