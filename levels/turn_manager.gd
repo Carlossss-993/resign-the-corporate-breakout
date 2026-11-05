@@ -40,6 +40,12 @@ func make_noise(noise_cell: Vector2i, radius: int = -1) -> void:
 			guard.investigate_noise(noise_cell)
 
 
+func update_guard_chase_target_silently(guard: Guard, ignore_hiding: bool = false) -> void:
+	if can_guard_see_player(guard, ignore_hiding):
+		guard.last_known_position = player.grid_position
+		guard.last_known_facing = Utils.string_to_dir(player.facing_direction)
+
+
 func on_player_moved(_new_grid_pos: Vector2i) -> void:
 	turns_taken += 1
 	turn_updated.emit(turns_taken)
@@ -51,10 +57,21 @@ func on_player_moved(_new_grid_pos: Vector2i) -> void:
 	for guard: Guard in guards:
 		guard_prev_positions[guard] = guard.grid_position
 		if guard.current_state == Guard.State.CHASE:
-			check_guard_vision(guard, false, player.just_entered_plant)
+			update_guard_chase_target_silently(guard, player.just_entered_plant)
+
+	var immediate_capture: bool = false
 
 	for guard: Guard in guards:
-		guard.take_turn()
+		var guard_pos: Vector2i = guard.grid_position
+		var next_cell: Vector2i = guard.get_next_target_cell()
+
+		var same_tile: bool = (player.grid_position == guard_pos)
+		var swap: bool = (player.grid_position == guard_pos and next_cell == player_prev)
+
+		if same_tile or swap:
+			immediate_capture = true 
+		else:
+			guard.take_turn()
 
 	if player.is_moving:
 		await player.move_finished
@@ -63,7 +80,8 @@ func on_player_moved(_new_grid_pos: Vector2i) -> void:
 		if guard.is_moving:
 			await guard.move_finished
 
-	if check_any_capture(player_prev, guard_prev_positions):
+	if immediate_capture or check_any_capture(player_prev, guard_prev_positions):
+		trigger_capture()
 		return
 
 	if check_win(guard_prev_positions):
@@ -123,13 +141,7 @@ func check_any_capture(player_prev: Vector2i, guard_prev_positions: Dictionary) 
 			and guard.grid_position == player_prev \
 			and guard_prev == player.grid_position
 
-		if swapped:
-			trigger_capture()
-			return true
-
-		if same_tile:
-			if is_exit_cell(player.grid_position) and not is_exit_cell(guard_prev):
-				continue
+		if swapped or same_tile:
 			trigger_capture()
 			return true
 
@@ -181,6 +193,20 @@ func check_guard_vision(guard: Guard, count_lost_turn: bool = true, ignore_hidin
 
 	guard.update_flashlight()
 	guard.update_question_marker()
+	update_stealth_music()
+
+
+func update_stealth_music() -> void:
+	var any_chasing: bool = false
+	for g in guards:
+		if g.current_state == Guard.State.CHASE:
+			any_chasing = true
+			break
+
+	if any_chasing:
+		MusicPlayer.play_track("chase")
+	else:
+		MusicPlayer.play_track("game")
 
 
 func alert_nearby_guards(spotter: Guard) -> void:

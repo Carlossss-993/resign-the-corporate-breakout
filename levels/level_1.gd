@@ -16,6 +16,9 @@ const PATH_TO_ELEVATOR: Array[Vector2i] = [
 @export var skip_intro_debug: bool = true
 @export var skip_events_debug: bool = false
 
+@export_group("Hints")
+@export var move_hint: Hint
+
 @export_group("Event Triggers - Stairs Down")
 @export var stairs_down_trigger_cells: Array[Vector2i] = []
 @export var stairs_down_target_cell: Vector2i = Vector2i.ZERO
@@ -58,11 +61,16 @@ func _ready() -> void:
 	boss.visible = false
 	elevator_sprite.play("closed")
 
+	if move_hint == null and has_node("%WasdHint"):
+		move_hint = %WasdHint as Hint
+
 	if not skip_events_debug:
 		setup_narrative_events()
 
 	if GameState.intro_seen or skip_intro_debug:
 		hud.visible = true
+		if move_hint:
+			move_hint.activate()
 		return
 
 	if hud:
@@ -79,8 +87,8 @@ func setup_narrative_events() -> void:
 		stairs_down_target_cell,
 		[DialogueLines.player("Las escaleras hacia abajo están fuera de servicio por mantenimiento desde hace 7 meses...")],
 		Vector2(2, 2),
-		true, # one_shot
-		true  # prevent_entry: no permite bajar la escalera
+		true,
+		true
 	)
 
 	create_event(
@@ -142,6 +150,8 @@ func run_intro_cutscene() -> void:
 	if player:
 		player.set_process_unhandled_input(true)
 		hud.visible = true
+	if move_hint:
+		move_hint.activate()
 
 
 func cell_to_world(cell: Vector2i) -> Vector2:

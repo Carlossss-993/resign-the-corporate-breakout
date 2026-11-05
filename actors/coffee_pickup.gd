@@ -18,20 +18,16 @@ func setup_visual_highlight() -> void:
 	if sprite == null:
 		return
 
-	# 1. Hacer que ignire la oscuridad del mapa (NightEffect / CanvasModulate)
 	var canvas_material: CanvasItemMaterial = CanvasItemMaterial.new()
 	canvas_material.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
 	sprite.material = canvas_material
 
-	# 2. Animación combinada: Flotado Y + Pulso de resplandor brillante
 	var start_y: float = sprite.position.y
 	var tween: Tween = create_tween().set_loops().set_parallel(true).set_trans(Tween.TRANS_SINE)
 	
-	# Flotado continuo
 	tween.tween_property(sprite, "position:y", start_y - float_distance, float_duration)
 	tween.tween_property(sprite, "position:y", start_y + float_distance, float_duration).set_delay(float_duration)
 
-	# Pulso de brillo (resalta contra el fondo oscuro)
 	tween.tween_property(sprite, "modulate", Color(1.5, 1.5, 1.3, 1.0), float_duration)
 	tween.tween_property(sprite, "modulate", Color(1.0, 1.0, 1.0, 1.0), float_duration).set_delay(float_duration)
 

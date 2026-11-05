@@ -9,7 +9,7 @@ const SPEAKER_MARGIN: float = 40.0
 const FADE_TIME: float = 0.3
 
 @export var text_speed: float = 0.03
-@export var voice_sound: AudioStream = preload("res://assets/audio/gibberish.mp3") # Ruta a tu audio .mp3
+@export var voice_sound: AudioStream = preload("res://assets/audio/gibberish.mp3")
 
 var dialogue_queue: Array[Dictionary] = []
 var current_line_index: int = 0
@@ -76,7 +76,13 @@ func start_dialogue(lines: Array[Dictionary]) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not is_active or not event.is_action_pressed("interact"):
+	if not is_active:
+		return
+
+	var is_space_pressed: bool = event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_SPACE
+	var is_advance_action: bool = event.is_action_pressed("interact") or event.is_action_pressed("ui_accept") or is_space_pressed
+
+	if not is_advance_action:
 		return
 
 	get_viewport().set_input_as_handled()
@@ -111,7 +117,6 @@ func show_current_line() -> void:
 	text_tween.tween_callback(on_typing_finished)
 
 
-# --- Sistema de Audio Modular para Voces ---
 func start_voice_sound(line: Dictionary) -> void:
 	if voice_player.stream == null:
 		return
@@ -119,26 +124,23 @@ func start_voice_sound(line: Dictionary) -> void:
 	var speaker_name: String = line.get("name", "")
 	var explicit_pitch: float = line.get("pitch", 0.0)
 
-	# Asignación de Pitch (Graves / Agudos)
 	var pitch: float = 1.0
 	if explicit_pitch > 0.0:
 		pitch = explicit_pitch
 	else:
 		match speaker_name:
-			"Jefe": pitch = 0.75       # Voz grave
-			"Jugador": pitch = 1.15    # Voz estándar/ligeramente aguda
-			_: pitch = 1.00 + float(absi(speaker_name.hash()) % 30) / 100.0 # Tono único por nombre
+			"Jefe": pitch = 0.75      
+			"Jugador": pitch = 1.15   
+			_: pitch = 1.00 + float(absi(speaker_name.hash()) % 30) / 100.0 
 
-	# Ligera variación aleatoria por línea para mayor naturalidad
+
 	voice_player.pitch_scale = pitch + randf_range(-0.03, 0.03)
 
-	# Reproducir desde un punto aleatorio dentro de los primeros 4 segundos
 	var start_offset: float = randf_range(0.0, 4.0)
 	voice_player.play(start_offset)
 
 
 func _on_voice_finished() -> void:
-	# Si sigue escribiendo y el audio de 8s termina, hace bucle desde otra posición aleatoria
 	if is_typing and voice_player.stream != null:
 		var start_offset: float = randf_range(0.0, 4.0)
 		voice_player.play(start_offset)

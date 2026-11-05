@@ -32,7 +32,6 @@ static func chebyshev_distance(pos_a: Vector2i, pos_b: Vector2i) -> int:
 	return maxi(diff.x, diff.y)
 
 
-# --- Grid ---
 static func get_base_layer(layers: Array[TileMapLayer]) -> TileMapLayer:
 	if layers.is_empty():
 		return null
@@ -105,7 +104,6 @@ static func has_line_of_sight(from: Vector2i, to: Vector2i, layers: Array[TileMa
 	return true
 
 
-# --- Animation ---
 static func play_animation(sprite: AnimatedSprite2D, state: String, facing_dir: String) -> void:
 	var anim_name: String = state + "_" + facing_dir
 	if sprite and sprite.sprite_frames and sprite.sprite_frames.has_animation(anim_name):

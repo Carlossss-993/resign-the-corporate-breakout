@@ -106,7 +106,63 @@ func take_turn() -> void:
 			process_investigate_turn()
 
 
-# --- Turns by state ---
+func get_next_target_cell() -> Vector2i:
+	var target: Vector2i = Vector2i(-1, -1)
+	var uses_diagonals: bool = false
+	var is_chasing: bool = false
+
+	match current_state:
+		State.PATROL:
+			if patrol_waypoints.is_empty():
+				return grid_position
+			target = patrol_waypoints[current_waypoint_index]
+			if grid_position == target:
+				if patrol_waypoints.size() <= 1:
+					return grid_position
+				var next_idx: int = current_waypoint_index
+				if loop_patrol:
+					next_idx = (current_waypoint_index + 1) % patrol_waypoints.size()
+				else:
+					var dir: int = patrol_direction
+					if next_idx + dir >= patrol_waypoints.size() or next_idx + dir < 0:
+						dir = -dir
+					next_idx += dir
+				target = patrol_waypoints[next_idx]
+
+		State.CHASE:
+			if last_known_position == Vector2i(-1, -1):
+				return grid_position
+			target = last_known_position
+			uses_diagonals = true
+			is_chasing = true
+
+		State.RETURN:
+			if patrol_waypoints.is_empty():
+				target = start_position
+			else:
+				var target_index: int = get_nearest_waypoint_index()
+				target = patrol_waypoints[target_index]
+			uses_diagonals = true
+
+		State.INVESTIGATE:
+			if investigate_target == Vector2i(-1, -1):
+				return grid_position
+			if Utils.chebyshev_distance(grid_position, investigate_target) <= 1:
+				return grid_position
+			target = investigate_target
+			uses_diagonals = true
+
+	if target == Vector2i(-1, -1) or target == grid_position:
+		return grid_position
+
+	var allow_diagonal: bool = uses_diagonals and (turns_since_diagonal + 1 >= diagonal_interval)
+	var step_dir: Vector2i = get_next_path_step(target, allow_diagonal, is_chasing)
+	if step_dir == Vector2i.ZERO:
+		return grid_position
+
+	return grid_position + step_dir
+
+
 func process_patrol_turn() -> void:
 	turns_since_diagonal = 0
 	if patrol_waypoints.is_empty():
@@ -236,7 +292,6 @@ func get_nearest_waypoint_index() -> int:
 	return nearest_index
 
 
-# --- Movement ---
 func move_towards(target: Vector2i, uses_diagonals: bool, is_chasing: bool) -> bool:
 	var allow_diagonal: bool = false
 	if uses_diagonals:
@@ -261,7 +316,6 @@ func face_last_known_direction() -> void:
 	Utils.play_animation(animated_sprite, "idle", facing_direction)
 
 
-# --- Pathfinding ---
 func is_step_walkable(from_cell: Vector2i, dir: Vector2i) -> bool:
 	if not Utils.is_tile_walkable(from_cell + dir, obstacle_layers):
 		return false
@@ -374,7 +428,6 @@ func get_fallback_step(target: Vector2i, allow_diagonal: bool) -> Vector2i:
 	return best_dir
 
 
-# --- Vision ---
 func has_line_of_sight(from: Vector2i, to: Vector2i) -> bool:
 	return Utils.has_line_of_sight(from, to, obstacle_layers)
 
@@ -399,7 +452,6 @@ func get_vision_tiles() -> Array[Vector2i]:
 	return tiles
 
 
-# --- Alerts ---
 func show_alert() -> void:
 	if alert_icon:
 		alert_icon.flash(1.2)
@@ -425,7 +477,6 @@ func update_question_marker() -> void:
 		question_icon.show_icon()
 
 
-# --- Flashlight ---
 func update_flashlight() -> void:
 	update_flashlight_width()
 	update_flashlight_rotation()

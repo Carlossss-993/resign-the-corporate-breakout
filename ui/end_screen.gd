@@ -20,6 +20,17 @@ func _ready() -> void:
 
 	action_button.pressed.connect(_on_action_button_pressed)
 
+	var focus_style: StyleBoxFlat = StyleBoxFlat.new()
+	focus_style.draw_center = false 
+	focus_style.border_width_left = 2
+	focus_style.border_width_top = 2
+	focus_style.border_width_right = 2
+	focus_style.border_width_bottom = 2
+	focus_style.border_color = Color(1.0, 1.0, 1.0, 0.85) 
+	focus_style.set_corner_radius_all(4)
+
+	action_button.add_theme_stylebox_override("focus", focus_style)
+
 	overlay.modulate.a = 0.0
 	banner.modulate.a = 0.0
 	visible = false
@@ -68,6 +79,11 @@ func animate_appearance() -> void:
 	var tween: Tween = create_tween().set_parallel(true)
 	tween.tween_property(overlay, "modulate:a", 0.75, 0.4)
 	tween.tween_property(banner, "modulate:a", 1.0, 0.4)
+
+	get_tree().create_timer(0.4).timeout.connect(func():
+		if visible and action_button:
+			action_button.grab_focus()
+	)
 
 
 func _on_action_button_pressed() -> void:

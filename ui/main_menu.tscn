@@ -76,3 +76,18 @@ theme_override_colors/font_color = Color(1, 0.9743462, 0.1703887, 1)
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_3l2vh")
 text = "Iniciar Partida"
+
+[node name="Control2" type="Control" parent="MarginContainer/VBoxContainer" unique_id=794425428]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="CreditsButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=835949055]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 50)
+custom_maximum_size = Vector2(250, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0.9743462, 0.1703887, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_3l2vh")
+text = "Mostrar Créditos"

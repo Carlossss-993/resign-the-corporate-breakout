@@ -13,14 +13,16 @@ enum HintType { ACTION_ONESHOT, PLAYER_STATE, NEARBY_GROUP }
 @export_group("Behavior")
 @export var hint_type: HintType = HintType.ACTION_ONESHOT
 @export_enum("any_move", "wait", "interact", "throw") var required_action: String = "any_move"
+@export var start_active: bool = true
 
 @export_group("Contextual Trigger Settings")
-@export var state_property: String = "is_hidden" # Propiedad del Player a evaluar (ej: "is_hidden" o "current_cups")
-@export var target_group: String = "coffee_pickups" # Grupo de objetos adyacentes
+@export var state_property: String = "is_hidden"
+@export var target_group: String = "coffee_pickups"
 @export var fade_duration: float = 0.3
 
 var is_visible_hint: bool = false
 var has_been_completed: bool = false
+var is_active: bool = false
 var player: Player
 
 @onready var panel: PanelContainer = $PanelContainer
@@ -42,18 +44,37 @@ func connect_to_player() -> void:
 
 	if player:
 		player.player_moved.connect(_on_player_moved)
-		
-		if hint_type == HintType.ACTION_ONESHOT:
-			fade_in()
-		else:
-			evaluate_context_hint()
+		if player.has_signal("cups_changed"):
+			player.cups_changed.connect(_on_cups_changed)
+
+	if start_active:
+		activate()
+
+
+func activate() -> void:
+	if is_active:
+		return
+	is_active = true
+
+	if player == null:
+		player = get_tree().get_first_node_in_group("player") as Player
+
+	if hint_type == HintType.ACTION_ONESHOT:
+		fade_in()
+	else:
+		evaluate_context_hint()
+
+
+func _on_cups_changed(_amount: int) -> void:
+	if not is_active or player == null:
+		return
+	evaluate_context_hint()
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if has_been_completed or not is_visible_hint or player == null:
+	if not is_active or has_been_completed or not is_visible_hint or player == null:
 		return
 
-	# Permite completar el hint al realizar la acción configurada (incluyendo "throw")
 	var action_detected: bool = false
 	match required_action:
 		"wait":
@@ -61,7 +82,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		"interact":
 			action_detected = event.is_action_pressed("interact")
 		"throw":
-			action_detected = event.is_action_released("throw") # Se completa al soltar el lanzamiento
+			action_detected = event.is_action_released("throw")
 
 	if action_detected:
 		has_been_completed = true
@@ -69,7 +90,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_player_moved(_new_grid_pos: Vector2i) -> void:
-	if player == null:
+	if not is_active or player == null:
 		return
 
 	if hint_type == HintType.ACTION_ONESHOT:
@@ -81,7 +102,7 @@ func _on_player_moved(_new_grid_pos: Vector2i) -> void:
 
 
 func evaluate_context_hint() -> void:
-	if player == null or has_been_completed:
+	if not is_active or player == null or has_been_completed:
 		return
 
 	var should_show: bool = false
@@ -93,7 +114,7 @@ func evaluate_context_hint() -> void:
 				if val is bool:
 					should_show = val
 				elif val is int or val is float:
-					should_show = val > 0 # Muestra la pista si la propiedad (ej: current_cups) es mayor a 0
+					should_show = val > 0
 
 		HintType.NEARBY_GROUP:
 			should_show = is_near_group_entity() and player.current_cups < player.max_cups
@@ -119,7 +140,7 @@ func is_near_group_entity() -> bool:
 
 
 func fade_in() -> void:
-	if is_visible_hint or has_been_completed:
+	if not is_active or is_visible_hint or has_been_completed:
 		return
 	is_visible_hint = true
 	var tween: Tween = create_tween()

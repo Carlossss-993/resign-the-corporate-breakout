@@ -44,7 +44,7 @@ var is_aiming: bool = false
 
 func _ready() -> void:
 	super()
-	add_to_group("player") # Registra el nodo en el grupo player para todo el proyecto
+	add_to_group("player") 
 	add_child(audio_player)
 	set_camera_limits()
 	check_hiding_status()
@@ -58,7 +58,6 @@ func set_camera_limits() -> void:
 	var has_rect: bool = false
 	var tile_size: Vector2i = Vector2i.ZERO
 
-	# Fusiona el área de todas las capas configuradas (FloorLayer, WallsLayer, etc.)
 	for layer in obstacle_layers:
 		if layer == null:
 			continue
@@ -71,12 +70,11 @@ func set_camera_limits() -> void:
 			combined_rect = rect
 			has_rect = true
 		else:
-			combined_rect = combined_rect.merge(rect) # Amplía el rectángulo para incluir los muros exteriores
+			combined_rect = combined_rect.merge(rect)
 
 	if not has_rect:
 		return
 
-	# Aplica los límites exactos calculados
 	camera.limit_left = combined_rect.position.x * tile_size.x
 	camera.limit_top = combined_rect.position.y * tile_size.y
 	camera.limit_right = combined_rect.end.x * tile_size.x
@@ -88,13 +86,10 @@ func clear_input_buffer() -> void:
 	buffered_wait = false
 
 
-# --- Input & Aiming ---
 func _unhandled_input(event: InputEvent) -> void:
-	# Leer dirección o intención de espera
 	var dir: Vector2i = read_direction(event)
 	var wants_wait: bool = event.is_action_pressed("wait")
 
-	# Si los controles están bloqueados (ej: turno del guardia) o en movimiento, guardamos en el buffer
 	if input_locked or is_moving:
 		if dir != Vector2i.ZERO:
 			buffered_dir = dir
@@ -108,7 +103,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		if try_interact_coffee():
 			return
 
-	# Manejo del lanzamiento de taza (acción "throw")
 	if event.is_action_pressed("throw"):
 		if current_cups <= 0:
 			play_error_sound()
@@ -137,7 +131,6 @@ func try_interact_coffee() -> bool:
 	var pickups: Array[Node] = get_tree().get_nodes_in_group("coffee_pickups")
 	for pickup in pickups:
 		if pickup is CoffeePickup:
-			# Si el jugador está en la celda contigua (distancia Chebyshev <= 1)
 			var dist: int = Utils.chebyshev_distance(grid_position, pickup.grid_position)
 			if dist <= 1:
 				return pickup.try_collect(self)
@@ -159,20 +152,17 @@ func _draw() -> void:
 		for y in range(-throw_range, throw_range + 1):
 			var cell: Vector2i = grid_position + Vector2i(x, y)
 			
-			# Rango circular exacto en grilla
 			if grid_position.distance_to(cell) <= throw_range:
-				# Verifica que la casilla sea caminable y que haya línea de visión directa (sin paredes en medio)
 				if Utils.is_tile_walkable(cell, obstacle_layers) and Utils.has_line_of_sight(grid_position, cell, obstacle_layers):
 					var center: Vector2 = to_local(Utils.grid_to_world(cell, obstacle_layers))
 					var color: Color = range_color
 					
 					if cell == hovered_cell:
-						color.a = 0.65 # Resaltar con más opacidad la celda bajo el puntero
+						color.a = 0.65 
 
 					draw_rect(Rect2(center - tile_size / 2.0, tile_size), color)
 
 
-# --- Cup Action Logic ---
 func try_throw_cup() -> void:
 	var target_cell: Vector2i = Utils.world_to_grid(get_global_mouse_position(), obstacle_layers)
 
@@ -189,7 +179,7 @@ func try_throw_cup() -> void:
 
 func execute_throw(target_cell: Vector2i) -> void:
 	current_cups -= 1
-	input_locked = true # 1. Bloquea el input durante el vuelo de la taza
+	input_locked = true 
 
 	if cup_scene:
 		var cup_instance = cup_scene.instantiate()
@@ -200,22 +190,18 @@ func execute_throw(target_cell: Vector2i) -> void:
 		
 		cup_instance.launch(start_pos, target_pos, target_cell, obstacle_layers)
 		
-		# 2. Espera a que la taza toque el suelo y ejecute make_noise()
 		if cup_instance.has_signal("impacted"):
 			await cup_instance.impacted
 
 	previous_grid_position = grid_position
 	just_entered_plant = false
 	
-	# 3. Al emitir player_moved AHORA, los guardias ya estarán en estado INVESTIGATE 
-	# y darán su primer paso directamente hacia el charco en este turno.
 	player_moved.emit(grid_position)
 
 
 func add_cup() -> void:
 	if current_cups < max_cups:
 		current_cups += 1
-		GameState.cups_unlocked = true
 	else:
 		play_error_sound()
 
@@ -255,7 +241,6 @@ func unlock_input() -> void:
 		try_move(held)
 
 
-# --- Actions ---
 func act(dir: Vector2i, wants_wait: bool) -> void:
 	if wants_wait:
 		wait_turn()
@@ -285,7 +270,6 @@ func try_move(dir: Vector2i) -> void:
 	player_moved.emit(grid_position)
 
 
-# --- Stealth ---
 func check_hiding_status() -> void:
 	var in_plant: bool = plants_layer != null and plants_layer.get_cell_source_id(grid_position) != -1
 	if in_plant == is_hidden:

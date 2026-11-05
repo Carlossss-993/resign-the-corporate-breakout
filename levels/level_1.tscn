@@ -142,9 +142,10 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Level1" type="Node2D" unique_id=169069877]
+[node name="Level1" type="Node2D" unique_id=169069877 node_paths=PackedStringArray("move_hint")]
 script = ExtResource("1_i6od7")
 skip_intro_debug = false
+move_hint = NodePath("HintWASD")
 stairs_down_trigger_cells = Array[Vector2i]([Vector2i(10, 13), Vector2i(9, 13)])
 stairs_down_target_cell = Vector2i(3, 17)
 elevator_trigger_cells = Array[Vector2i]([Vector2i(10, 14), Vector2i(9, 14)])
@@ -330,6 +331,7 @@ unique_name_in_owner = true
 visible = false
 
 [node name="HintWASD" parent="." unique_id=696815056 instance=ExtResource("18_oqlok")]
+start_active = false
 
 [node name="HintPlants" parent="." unique_id=357448850 instance=ExtResource("18_oqlok")]
 text = "Presiona Espacio para pasar el turno y mantenerte oculto"

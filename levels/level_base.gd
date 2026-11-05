@@ -35,7 +35,6 @@ func _ready() -> void:
 
 
 func setup_level_base() -> void:
-	# --- Sincronización del índice de nivel ---
 	GameState.sync_level_index(scene_file_path)
 
 	if turn_manager == null and has_node("%TurnManager"):
@@ -57,7 +56,6 @@ func setup_level_base() -> void:
 		if not exit_cells.is_empty():
 			turn_manager.exit_cells = exit_cells
 
-	# --- Inicialización del HUD ---
 	if hud:
 		hud.visible = true
 		hud.update_floor_info(floor_number, floor_name)
@@ -65,11 +63,8 @@ func setup_level_base() -> void:
 	if player and hud:
 		player.cups_changed.connect(hud.update_cups)
 		hud.update_cups(player.current_cups)
-
-	# Evento automático para escaleras hacia abajo
+	MusicPlayer.play_track("game")
 	setup_default_stairs_down()
-
-	# --- Reproducción de líneas de entrada automáticas ---
 	call_deferred("play_entry_lines")
 
 
@@ -80,14 +75,18 @@ func setup_default_stairs_down() -> void:
 			Vector2i(-1, -1),
 			[],
 			Vector2(1.4, 1.4),
-			stairs_down_one_shot,
-			true, # prevent_entry: rebota al jugador sin dejarlo avanzar
-			stairs_down_lines
+			stairs_down_one_shot, 
+			true,
+			stairs_down_lines,
+			"stairs_down"
 		)
 
 
 func play_entry_lines() -> void:
 	if entry_lines.is_empty() or dialogue_ui == null:
+		return
+
+	if GameState.is_event_seen(level_id, "entry_lines"):
 		return
 
 	if player:
@@ -97,6 +96,8 @@ func play_entry_lines() -> void:
 
 	dialogue_ui.start_dialogue(entry_lines)
 	await dialogue_ui.dialogue_finished
+
+	GameState.mark_event_seen(level_id, "entry_lines")
 
 	if player:
 		player.set_process_unhandled_input(true)
@@ -109,7 +110,8 @@ func create_event(
 	zoom: Vector2 = Vector2(2, 2),
 	one_shot: bool = true,
 	prevent_entry: bool = false,
-	lines_pool: Array = []
+	lines_pool: Array = [],
+	p_event_id: String = ""
 ) -> EventTrigger:
 	if trigger_cells.is_empty():
 		return null
@@ -123,6 +125,7 @@ func create_event(
 	trigger.prevent_entry = prevent_entry
 	trigger.target_zoom = zoom
 	trigger.transition_duration = 0.8
+	trigger.event_id = p_event_id if not p_event_id.is_empty() else "event_%s" % str(trigger_cells)
 	add_child(trigger)
 	return trigger
 

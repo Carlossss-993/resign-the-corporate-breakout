@@ -9,16 +9,16 @@ extends CanvasLayer
 
 func _ready() -> void:
 	update_turns(0)
-	refresh_cups_visibility()
+	refresh_cups_visibility(0)
 
 
-func refresh_cups_visibility() -> void:
+func refresh_cups_visibility(amount: int) -> void:
 	var container: CanvasItem = cups_container
 	if container == null and cups_label != null:
 		container = cups_label.get_parent() as CanvasItem
 		
 	if container:
-		container.visible = GameState.cups_unlocked
+		container.visible = amount > 0
 
 
 func update_turns(turns: int) -> void:
@@ -32,10 +32,7 @@ func update_floor_info(floor_number: int, floor_name: String) -> void:
 
 
 func update_cups(amount: int) -> void:
-	if amount > 0:
-		GameState.cups_unlocked = true
-
 	if cups_label:
 		cups_label.text = "x%d" % amount
 
-	refresh_cups_visibility()
+	refresh_cups_visibility(amount)

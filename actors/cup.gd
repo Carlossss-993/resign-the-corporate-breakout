@@ -4,7 +4,7 @@ signal impacted
 
 @export var fly_duration: float = 0.55
 @export var arc_height: float = -70.0
-@export var noise_radius: int = 8 # <-- R8: Radio de ruido exportado propio para la taza
+@export var noise_radius: int = 8
 
 var target_cell: Vector2i
 var obstacle_layers: Array[TileMapLayer] = []
@@ -66,4 +66,4 @@ func spawn_coffee_puddle() -> void:
 func alert_guards_nearby() -> void:
 	var turn_manager = get_tree().get_first_node_in_group("turn_manager")
 	if turn_manager and turn_manager.has_method("make_noise"):
-		turn_manager.make_noise(target_cell, noise_radius) # <-- Pasa el radio propio de la taza
+		turn_manager.make_noise(target_cell, noise_radius)

@@ -1,48 +1,63 @@
 extends Control
 
-@export var scroll_duration: float = 40.0 # Tiempo en segundos que tardan en subir los créditos
-@export var extra_padding: float = 100.0   # Margen extra al terminar para que pase todo el texto
+@export var scroll_duration: float = 40.0
+@export var extra_padding: float = 100.0
 
 @onready var credits_container: Control = $MarginContainer/CreditsContainer
 @onready var vbox: VBoxContainer = $MarginContainer/CreditsContainer/VBoxContainer
+@onready var return_prompt_label: Label = get_node_or_null("%ReturnPrompt") 
 
 var scroll_tween: Tween
+var is_finished: bool = false
 
 
 func _ready() -> void:
+	MusicPlayer.play_track("credits")
+
+	if return_prompt_label:
+		return_prompt_label.visible = false
+
 	start_credits_scroll()
 
 
 func start_credits_scroll() -> void:
-	await get_tree().process_frame # Espera un frame para que Godot calcule el tamaño real del VBox
-	
+	await get_tree().process_frame
+
 	var viewport_height: float = get_viewport_rect().size.y
 	var total_height: float = vbox.size.y
 
-	# Posiciona los créditos justo abajo de la pantalla visible
 	credits_container.position.y = viewport_height
-
-	# El destino final es mover hacia arriba todo el texto hasta que salga por completo
 	var target_y: float = -(total_height + extra_padding)
 
 	scroll_tween = create_tween()
 	scroll_tween.tween_property(credits_container, "position:y", target_y, scroll_duration)\
 		.set_trans(Tween.TRANS_LINEAR)
 
-	# Al terminar la animación, regresa al menú principal
-	scroll_tween.finished.connect(_on_credits_finished)
+	scroll_tween.finished.connect(_on_scroll_completed)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_pressed():
-		# Si presiona espacio/enter/clic o tecla de interactuar, salta los créditos inmediatamente
-		if event.is_action_pressed("ui_accept") or event.is_action_pressed("interact") or event.is_action_pressed("ui_cancel"):
-			_on_credits_finished()
+	if is_finished:
+		if event.is_action_pressed("ui_accept") or event.is_action_pressed("interact") or (event is InputEventKey and event.pressed and event.keycode == KEY_SPACE):
+			GameState.go_to_menu()
+		return
+
+	if event.is_action("ui_accept") or event.is_action("interact"):
+		if scroll_tween and scroll_tween.is_running():
+			if event.is_pressed():
+				scroll_tween.set_speed_scale(2.5) 
+			elif event.is_released():
+				scroll_tween.set_speed_scale(1.0)
 
 
-func _on_credits_finished() -> void:
-	if scroll_tween and scroll_tween.is_running():
-		scroll_tween.kill()
-
-	# Carga el menú principal cargando la escena desde GameState
-	GameState.go_to_menu()
+func _on_scroll_completed() -> void:
+	is_finished = true
+	if return_prompt_label:
+		return_prompt_label.visible = true
+	else:
+		var prompt: Label = Label.new()
+		prompt.text = "Presiona Enter o Espacio para volver al menú principal"
+		prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		prompt.anchors_preset = Control.PRESET_BOTTOM_WIDE
+		prompt.position.y -= 50.0
+		add_child(prompt)
