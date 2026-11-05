@@ -21,6 +21,8 @@
 
 [node name="Level4" type="Node2D" unique_id=169069877]
 script = ExtResource("1_yafm2")
+floor_number = 6
+floor_name = "¿Fiesta de Halloween?"
 exit_cells = Array[Vector2i]([Vector2i(30, 1), Vector2i(31, 1)])
 
 [node name="NightEffect" type="CanvasModulate" parent="." unique_id=1657195542]

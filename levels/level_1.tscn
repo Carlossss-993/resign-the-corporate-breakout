@@ -144,6 +144,7 @@ animations = [{
 
 [node name="Level1" type="Node2D" unique_id=169069877 node_paths=PackedStringArray("move_hint")]
 script = ExtResource("1_i6od7")
+skip_intro_debug = false
 move_hint = NodePath("HintWASD")
 stairs_down_trigger_cells = Array[Vector2i]([Vector2i(10, 13), Vector2i(9, 13)])
 stairs_down_target_cell = Vector2i(3, 17)
