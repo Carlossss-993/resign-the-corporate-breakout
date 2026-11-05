@@ -12,6 +12,8 @@ var seen_events: Dictionary = {}
 	"res://levels/level_1.tscn",
 	"res://levels/level_2.tscn",
 	"res://levels/level_3.tscn",
+	"res://levels/level_4.tscn",
+	"res://ui/to_be_continued.tscn",
 	"res://ui/credits.tscn"
 ]
 var current_level_index: int = 0

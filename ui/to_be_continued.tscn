@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://df8lnmxvis7km"]
+
+[ext_resource type="Script" uid="uid://c78x2c26h1jsi" path="res://ui/to_be_continued.gd" id="1_kyxbj"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_25je8"]
+font_size = 40
+outline_size = 4
+
+[node name="ToBeContinued" type="Control" unique_id=982757371]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_kyxbj")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1687038864]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0, 0, 0, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="ColorRect" unique_id=406518540]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="Label" type="Label" parent="ColorRect/MarginContainer" unique_id=2002340681]
+layout_mode = 2
+text = "Continuará..."
+label_settings = SubResource("LabelSettings_25je8")
+vertical_alignment = 2
