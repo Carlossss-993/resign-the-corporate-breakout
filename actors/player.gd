@@ -51,17 +51,36 @@ func _ready() -> void:
 
 
 func set_camera_limits() -> void:
-	var base_layer: TileMapLayer = Utils.get_base_layer(obstacle_layers)
-	if camera == null or base_layer == null:
+	if camera == null or obstacle_layers.is_empty():
 		return
 
-	var used_rect: Rect2i = base_layer.get_used_rect()
-	var tile_size: Vector2i = base_layer.tile_set.tile_size
+	var combined_rect: Rect2i = Rect2i()
+	var has_rect: bool = false
+	var tile_size: Vector2i = Vector2i.ZERO
 
-	camera.limit_left = used_rect.position.x * tile_size.x
-	camera.limit_top = used_rect.position.y * tile_size.y
-	camera.limit_right = used_rect.end.x * tile_size.x
-	camera.limit_bottom = used_rect.end.y * tile_size.y
+	# Fusiona el área de todas las capas configuradas (FloorLayer, WallsLayer, etc.)
+	for layer in obstacle_layers:
+		if layer == null:
+			continue
+		var rect: Rect2i = layer.get_used_rect()
+		if rect.size == Vector2i.ZERO:
+			continue
+		
+		tile_size = layer.tile_set.tile_size
+		if not has_rect:
+			combined_rect = rect
+			has_rect = true
+		else:
+			combined_rect = combined_rect.merge(rect) # Amplía el rectángulo para incluir los muros exteriores
+
+	if not has_rect:
+		return
+
+	# Aplica los límites exactos calculados
+	camera.limit_left = combined_rect.position.x * tile_size.x
+	camera.limit_top = combined_rect.position.y * tile_size.y
+	camera.limit_right = combined_rect.end.x * tile_size.x
+	camera.limit_bottom = combined_rect.end.y * tile_size.y
 
 
 func clear_input_buffer() -> void:

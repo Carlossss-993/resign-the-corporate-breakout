@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://c8khn5cv0ra3i"]
 
 [ext_resource type="Script" uid="uid://811r0rfldwie" path="res://levels/level_1.gd" id="1_i6od7"]
-[ext_resource type="TileSet" uid="uid://3pp8xfou4qw4" path="res://assets/tilesets/base_layer.tres" id="2_betor"]
+[ext_resource type="TileSet" uid="uid://3pp8xfou4qw4" path="res://assets/tilesets/floor_layer.tres" id="2_betor"]
 [ext_resource type="TileSet" uid="uid://detjys721l63i" path="res://assets/tilesets/fixtures.tres" id="3_vjtdm"]
 [ext_resource type="Texture2D" uid="uid://buffv5ktu2xa6" path="res://assets/tilesets/animated_elevator_door_entrance_2_48x48.png" id="5_4knja"]
 [ext_resource type="PackedScene" uid="uid://cd1654qqouk7" path="res://actors/player.tscn" id="6_vjtdm"]
@@ -144,7 +144,7 @@ animations = [{
 
 [node name="Level1" type="Node2D" unique_id=169069877]
 script = ExtResource("1_i6od7")
-skip_events_debug = true
+skip_intro_debug = false
 stairs_down_trigger_cells = Array[Vector2i]([Vector2i(10, 13), Vector2i(9, 13)])
 stairs_down_target_cell = Vector2i(3, 17)
 elevator_trigger_cells = Array[Vector2i]([Vector2i(10, 14), Vector2i(9, 14)])

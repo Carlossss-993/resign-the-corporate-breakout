@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Resign:TheCorporateBreakout"
-run/main_scene="uid://c8khn5cv0ra3i"
+run/main_scene="uid://dthwn5auun67r"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 

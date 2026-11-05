@@ -10,7 +10,10 @@ extends LevelBase
 
 func _ready() -> void:
 	entry_lines = [
-		DialogueLines.player("Piso 2... Las cosas empiezan a ponerse complicadas.")
+		DialogueLines.guard("Tengo que vigilar que nadie suba... "),
+		DialogueLines.guard("Por nada del mundo me moveré de mi posición."),
+
+		DialogueLines.player("Piso 4... Las cosas empiezan a ponerse complicadas.")
 	]
 	super()
 

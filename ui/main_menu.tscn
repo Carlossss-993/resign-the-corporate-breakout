@@ -1,0 +1,78 @@
+[gd_scene format=3 uid="uid://dthwn5auun67r"]
+
+[ext_resource type="Script" uid="uid://u42pwc0dutgs" path="res://ui/main_menu.gd" id="1_0dkrt"]
+[ext_resource type="Texture2D" uid="uid://bdpbp2wh2wn8g" path="res://assets/backgrounds/mainMenu.jpg" id="2_wk0pr"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_3l2vh"]
+font_size = 65
+font_color = Color(1, 0.4509804, 0, 1)
+outline_size = 20
+outline_color = Color(0, 0.015686275, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3l2vh"]
+bg_color = Color(0, 0, 0, 0.7058824)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.972549, 0.16862746, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="MainMenu" type="Control" unique_id=853593797]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0dkrt")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1633322150]
+layout_mode = 0
+offset_right = 1161.0
+offset_bottom = 648.0
+texture = ExtResource("2_wk0pr")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=209792495]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 40
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1653832059]
+layout_mode = 2
+alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer" unique_id=1293651837]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/PanelContainer" unique_id=1240605463]
+layout_mode = 2
+text = "ReSiGn: 
+ThE CoRpOrAtE BrEaKoUt"
+label_settings = SubResource("LabelSettings_3l2vh")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer" unique_id=2142558054]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=2067640148]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 50)
+custom_maximum_size = Vector2(250, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0.9743462, 0.1703887, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_3l2vh")
+text = "Iniciar Partida"

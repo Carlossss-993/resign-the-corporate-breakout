@@ -1,0 +1,158 @@
+[gd_scene format=3 uid="uid://deii0j3w4pigk"]
+
+[ext_resource type="Script" uid="uid://b4b68ylrehdyk" path="res://ui/credits.gd" id="1_ed0b0"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_orljq"]
+font_size = 40
+outline_size = 6
+
+[sub_resource type="LabelSettings" id="LabelSettings_ed0b0"]
+font_size = 30
+outline_size = 1
+
+[node name="Credits" type="Control" unique_id=1711177655]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_ed0b0")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=997850322]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0, 0, 0, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=814157397]
+custom_minimum_size = Vector2(1152, 648)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="CreditsContainer" type="Control" parent="MarginContainer" unique_id=713010806]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/CreditsContainer" unique_id=1261523567]
+layout_mode = 0
+offset_right = 1072.0
+offset_bottom = 1894.0
+theme_override_constants/separation = 400
+
+[node name="Label" type="Label" parent="MarginContainer/CreditsContainer/VBoxContainer" unique_id=2008723684]
+layout_mode = 2
+text = "ReSiGn: 
+ThE CoRpOrAtE BrEaKoUt
+
+GRACIAS POR JUGAR"
+label_settings = SubResource("LabelSettings_orljq")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="MarginContainer/CreditsContainer/VBoxContainer" unique_id=492556571]
+layout_mode = 2
+text = "--- DIRECCIÓN Y DISEÑO ---
+Carlos Sneider Fandiño Hernández
+
+
+
+
+
+
+--- PROGRAMACIÓN Y SISTEMAS ---
+Carlos Sneider Fandiño Hernández
+
+
+
+
+
+
+--- HISTORIA Y GUIÓN ---
+Carlos Sneider Fandiño Hernández
+
+
+
+
+
+
+--- DISEÑO DE NIVELES ---
+Carlos Sneider Fandiño Hernández
+
+
+
+
+
+
+--- ARTE Y RECURSOS VISUALES ---
+Tilemaps y Entornos:
+Modern Interiors / Modern Office
+
+
+
+
+
+Ilustraciones y Retratos:
+Generados mediante Inteligencia Artificial (IA)
+
+
+
+
+
+
+--- DISEÑO DE PERSONAJES ---
+Sprites de Personajes:
+Modern Interiors Character Generator
+
+
+
+
+
+
+--- AUDIO Y EFECTOS DE SONIDO ---
+Efectos de Sonido (SFX):
+Descargados desde Pixabay
+
+
+
+
+
+
+--- TIPOGRAFÍA ---
+Fuente Principal:
+IBM Plex Mono
+
+
+
+
+
+
+--- MOTOR DE JUEGO ---
+Desarrollado en:
+Godot Engine
+
+
+
+
+
+
+--- AGRADECIMIENTOS ESPECIALES ---
+A todos los empleados que alguna vez 
+quisieron irse a casa antes de tiempo.
+
+A la familia y amigos por el apoyo incondicional.
+
+Y especialmente a ti, 
+por jugar y completar el juego.
+
+
+
+
+
+
+--- FIN DE LA JORNADA ---
+(Presiona cualquier tecla para volver al menú)"
+label_settings = SubResource("LabelSettings_ed0b0")
+horizontal_alignment = 1
+vertical_alignment = 1

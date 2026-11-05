@@ -17,6 +17,7 @@ const FLASHLIGHT_ROTATION: Dictionary = {"up": 0, "right": 90, "down": 180, "lef
 @export_group("Patrol")
 @export var patrol_waypoints: Array[Vector2i] = []
 @export var loop_patrol: bool = true
+@export_enum("down", "up", "left", "right") var initial_facing_direction: String = "down"
 
 @export_group("AI & Difficulty")
 @export_range(2, 10) var diagonal_interval: int = 2
@@ -56,12 +57,14 @@ var investigate_timer: int = 0
 
 func _ready() -> void:
 	super()
+	facing_direction = initial_facing_direction
 	last_completed_grid_pos = grid_position
 	vision_changed.connect(queue_redraw)
 	if question_icon:
 		question_icon.top_level = true
 	start_position = grid_position
 	update_flashlight()
+	Utils.play_animation(animated_sprite, "idle", facing_direction)
 
 
 func finish_move() -> void:
@@ -107,6 +110,7 @@ func take_turn() -> void:
 func process_patrol_turn() -> void:
 	turns_since_diagonal = 0
 	if patrol_waypoints.is_empty():
+		Utils.play_animation(animated_sprite, "idle", facing_direction)
 		return
 
 	var target: Vector2i = patrol_waypoints[current_waypoint_index]
@@ -159,7 +163,6 @@ func process_investigate_turn() -> void:
 
 	var dist: int = Utils.chebyshev_distance(grid_position, investigate_target)
 
-	# Se detiene en la celda adyacente (distancia 1) sin pisar el charco de café
 	if dist <= 1:
 		var look_dir: Vector2i = investigate_target - grid_position
 		facing_direction = Utils.vector_to_cardinal(look_dir, facing_direction)
@@ -174,7 +177,6 @@ func process_investigate_turn() -> void:
 			update_question_marker()
 		return
 
-	# Si aún está lejos de la celda del impacto, camina hacia allá
 	if not move_towards(investigate_target, true, false):
 		var look_dir: Vector2i = investigate_target - grid_position
 		facing_direction = Utils.vector_to_cardinal(look_dir, facing_direction)
@@ -197,12 +199,11 @@ func investigate_noise(noise_cell: Vector2i) -> void:
 
 
 func return_to_start() -> void:
-	if grid_position == start_position:
+	if grid_position == start_position or not move_towards(start_position, true, false):
 		current_state = State.PATROL
-		return
-
-	if not move_towards(start_position, true, false):
-		current_state = State.PATROL
+		facing_direction = initial_facing_direction
+		update_flashlight()
+		Utils.play_animation(animated_sprite, "idle", facing_direction)
 
 
 func advance_waypoint() -> void:

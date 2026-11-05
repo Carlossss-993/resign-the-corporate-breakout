@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cmedg8pgadfif"]
 
 [ext_resource type="Script" uid="uid://b5p0t1vio85r5" path="res://levels/level_base.gd" id="1_u6tk6"]
-[ext_resource type="TileSet" uid="uid://3pp8xfou4qw4" path="res://assets/tilesets/base_layer.tres" id="2_3dbtp"]
+[ext_resource type="TileSet" uid="uid://3pp8xfou4qw4" path="res://assets/tilesets/floor_layer.tres" id="2_3dbtp"]
 [ext_resource type="TileSet" uid="uid://detjys721l63i" path="res://assets/tilesets/fixtures.tres" id="3_j8l06"]
 [ext_resource type="TileSet" uid="uid://dlkn672d0ke6s" path="res://assets/tilesets/forniture.tres" id="4_peaqv"]
 [ext_resource type="PackedScene" uid="uid://cd1654qqouk7" path="res://actors/player.tscn" id="6_phlur"]

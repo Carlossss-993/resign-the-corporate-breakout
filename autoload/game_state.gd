@@ -10,6 +10,7 @@ var level_records: Dictionary = {}
 @export var levels: Array[String] = [
 	"res://levels/level_1.tscn",
 	"res://levels/level_2.tscn",
+	"res://ui/credits.tscn"
 ]
 var current_level_index: int = 0
 

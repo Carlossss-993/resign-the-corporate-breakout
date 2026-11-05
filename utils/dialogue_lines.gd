@@ -2,14 +2,15 @@ class_name DialogueLines
 
 const PLAYER_PORTRAIT: Texture2D = preload("res://assets/portraits/Player_Portrait.png")
 const BOSS_PORTRAIT: Texture2D = preload("res://assets/portraits/Boss_Portrait.png")
+const GUARD_PORTRAIT: Texture2D = preload("res://assets/portraits/Guard_Portrait.png")
 
 
 static func player(text: String) -> Dictionary:
 	return speaker("Jugador", text, "left", PLAYER_PORTRAIT)
 
 
-static func guard(text: String, portrait: Texture2D = null) -> Dictionary:
-	return speaker("Guardia", text, "right", portrait)
+static func guard(text: String) -> Dictionary:
+	return speaker("Guardia", text, "right", GUARD_PORTRAIT)
 
 
 static func boss(text: String) -> Dictionary:
